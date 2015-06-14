@@ -72,7 +72,7 @@ public class FuncionarioGUI extends javax.swing.JFrame {
 
         for (Funcionario f : funcionarios) {
             modelo.addRow(new Object[]{
-                f.getCodigo(), f.getNome(), f.getSexo(), "Área", f.getFuncao()
+                f.getCodigo(), f.getNome(), f.getSexo(), "Área", "Função"
             });
         }
     }

@@ -71,7 +71,7 @@ public class UsuarioTableModel extends AbstractTableModel {
             case 2:
                 return usuario.getUsuario();
             case 3:
-                return usuario.getArea().getNome();
+                return "usuario.getArea().getNome()";
             default:
                 return null;
         }

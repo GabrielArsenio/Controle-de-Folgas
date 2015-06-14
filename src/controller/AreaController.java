@@ -3,7 +3,7 @@ package controller;
 import dao.AreaDAO;
 import dao.jpa.AreaDAOJPA;
 import java.util.List;
-import model.Area;
+import model.Setor;
 
 /**
  *
@@ -11,32 +11,32 @@ import model.Area;
  */
 public class AreaController {
 
-    public Area salvar(Area area) {
+    public Setor salvar(Setor area) {
         AreaDAO dao = new AreaDAOJPA();
         return dao.save(area);
     }
 
     public boolean excluir(int codigo) {
         AreaDAO dao = new AreaDAOJPA();
-        return dao.remove(Area.class, codigo);
+        return dao.remove(Setor.class, codigo);
     }
 
-    public List<Area> listarTodos() {
+    public List<Setor> listarTodos() {
         AreaDAO dao = new AreaDAOJPA();
-        return dao.getAll(Area.class);
+        return dao.getAll(Setor.class);
     }
 
-    public List<Area> listarTodos(int min, int max) {
+    public List<Setor> listarTodos(int min, int max) {
         AreaDAO dao = new AreaDAOJPA();
-        return dao.getAll(Area.class);
+        return dao.getAll(Setor.class);
     }
 
-    public Area buscarPorId(int codigo) {
+    public Setor buscarPorId(int codigo) {
         AreaDAO dao = new AreaDAOJPA();
-        return dao.getById(Area.class, codigo);
+        return dao.getById(Setor.class, codigo);
     }
 
-    public List<Area> pesquisarNome(String nome) {
+    public List<Setor> pesquisarNome(String nome) {
         AreaDAO dao = new AreaDAOJPA();
         return dao.pesquisarNome(nome);
     }

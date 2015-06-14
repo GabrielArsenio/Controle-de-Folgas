@@ -11,6 +11,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 
 /**
  *
@@ -28,8 +29,9 @@ public class Usuario implements Serializable {
     private String usuario;
     @Column(length = 16)
     private String senha;
-    @ManyToOne
-    private Area area;
+    @OneToOne
+    private Funcionario funionario;
+    private int nivel;
 
     public Usuario() {
     }
@@ -37,6 +39,22 @@ public class Usuario implements Serializable {
     @Override
     public String toString() {
         return nome;
+    }
+
+    public Funcionario getFunionario() {
+        return funionario;
+    }
+
+    public void setFunionario(Funcionario funionario) {
+        this.funionario = funionario;
+    }
+
+    public int getNivel() {
+        return nivel;
+    }
+
+    public void setNivel(int nivel) {
+        this.nivel = nivel;
     }
 
     public int getCodigo() {
@@ -69,13 +87,5 @@ public class Usuario implements Serializable {
 
     public void setSenha(String senha) {
         this.senha = senha;
-    }
-
-    public Area getArea() {
-        return area;
-    }
-
-    public void setArea(Area area) {
-        this.area = area;
     }
 }

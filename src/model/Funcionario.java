@@ -28,9 +28,9 @@ public class Funcionario implements Serializable {
     private Date dataEfetivo;
     private char sexo;
     @ManyToOne
-    private Area area;
-    @Column(length = 50)
-    private String funcao;
+    private Setor area;
+//    @Column(length = 50)
+//    private String funcao;
     @Column(length = 15)
     private String telefone;
     @Column(length = 50)
@@ -91,21 +91,21 @@ public class Funcionario implements Serializable {
         this.sexo = sexo;
     }
 
-    public Area getArea() {
+    public Setor getArea() {
         return area;
     }
 
-    public void setArea(Area area) {
+    public void setArea(Setor area) {
         this.area = area;
     }
 
-    public String getFuncao() {
-        return funcao;
-    }
-
-    public void setFuncao(String funcao) {
-        this.funcao = funcao;
-    }
+//    public String getFuncao() {
+//        return funcao;
+//    }
+//
+//    public void setFuncao(String funcao) {
+//        this.funcao = funcao;
+//    }
 
     public String getTelefone() {
         return telefone;

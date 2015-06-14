@@ -6,23 +6,20 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 /**
+ * Classe que representa cargos ou funções de um funcionário no sistema.
  *
  * @author Gabriel
  */
 @Entity
-public class Area implements Serializable {
+public class Cargo implements Serializable {
 
     @Id
     @GeneratedValue
     private int codigo;
     private String nome;
+    private String descricao;
 
-    public Area() {
-    }
-
-    @Override
-    public String toString() {
-        return nome;
+    public Cargo() {
     }
 
     public int getCodigo() {
@@ -39,5 +36,18 @@ public class Area implements Serializable {
 
     public void setNome(String nome) {
         this.nome = nome;
+    }
+
+    public String getDescricao() {
+        return descricao;
+    }
+
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
+    }
+
+    @Override
+    public String toString() {
+        return nome;
     }
 }

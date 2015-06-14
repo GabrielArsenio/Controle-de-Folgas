@@ -2,16 +2,16 @@ package dao.jpa;
 
 import dao.AreaDAO;
 import java.util.List;
-import model.Area;
+import model.Setor;
 
 /**
  *
  * @author gabriel_arsenio
  */
-public class AreaDAOJPA extends DAOJPA<Area, Integer> implements AreaDAO {
+public class AreaDAOJPA extends DAOJPA<Setor, Integer> implements AreaDAO {
 
     @Override
-    public List<Area> pesquisarNome(String nome) {
+    public List<Setor> pesquisarNome(String nome) {
         return getEntityManager().createQuery(
                 "select a arom Area a where a.nome like '%" + nome + "%'")
                 .getResultList();

@@ -1,13 +1,13 @@
 package dao;
 
 import java.util.List;
-import model.Area;
+import model.Setor;
 
 /**
  *
  * @author gabriel_arsenio
  */
-public interface AreaDAO extends DAO<Area, Integer> {
+public interface AreaDAO extends DAO<Setor, Integer> {
 
-    List<Area> pesquisarNome(String nome);
+    List<Setor> pesquisarNome(String nome);
 }

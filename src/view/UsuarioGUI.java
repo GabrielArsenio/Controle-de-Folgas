@@ -75,7 +75,7 @@ public class UsuarioGUI extends javax.swing.JFrame {
 
         for (Usuario u : usuarios) {
             modelo.addRow(new Object[]{
-                u.getCodigo(), u.getNome(), u.getUsuario(), u.getArea()
+                u.getCodigo(), u.getNome(), u.getUsuario(), "u.getArea()"
             });
         }
     }
@@ -97,7 +97,7 @@ public class UsuarioGUI extends javax.swing.JFrame {
             txNome.setText(usu.getNome());
             txUsuario.setText(usu.getUsuario());
             txSenha.setText(usu.getSenha());
-            txCodigoArea.setText(String.valueOf(usu.getArea().getCodigo()));
+//            txCodigoArea.setText(String.valueOf(usu.getArea().getCodigo()));
         } catch (NullPointerException ex) {
             System.out.println("Erro: Campo nulo.");
         }
@@ -140,7 +140,7 @@ public class UsuarioGUI extends javax.swing.JFrame {
 
                 for (Usuario us : usuarios) {
                     modelo.addRow(new Object[]{
-                        us.getCodigo(), us.getNome(), us.getUsuario(), us.getArea()
+                        us.getCodigo(), us.getNome(), us.getUsuario(), "us.getArea()"
                     });
                 }
 
@@ -166,7 +166,7 @@ public class UsuarioGUI extends javax.swing.JFrame {
 
                     for (Usuario us : usuarios) {
                         modelo.addRow(new Object[]{
-                            us.getCodigo(), us.getNome(), us.getUsuario(), us.getArea()
+                            us.getCodigo(), us.getNome(), us.getUsuario(), "us.getArea()"
                         });
                     }
                 } else {

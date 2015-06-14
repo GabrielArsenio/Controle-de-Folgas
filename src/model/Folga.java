@@ -22,8 +22,8 @@ public class Folga implements Serializable {
     private int codigo;
     @ManyToOne
     private Funcionario funcionario;
-    @ManyToOne
-    private Area area;
+//    @ManyToOne
+//    private Area area;
     private char tipo;
     @Temporal(TemporalType.DATE)
     private Date dtInicio;
@@ -65,13 +65,13 @@ public class Folga implements Serializable {
         this.funcionario = funcionario;
     }
 
-    public Area getArea() {
-        return area;
-    }
-
-    public void setArea(Area area) {
-        this.area = area;
-    }
+//    public Area getArea() {
+//        return area;
+//    }
+//
+//    public void setArea(Area area) {
+//        this.area = area;
+//    }
 
     public String getTipo() {
         switch (tipo) {
