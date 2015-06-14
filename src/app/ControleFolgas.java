@@ -1,6 +1,6 @@
 package app;
 
-import view.JanelaPrincipalGUI;
+import view.LoginGUI;
 
 /**
  *
@@ -9,6 +9,6 @@ import view.JanelaPrincipalGUI;
 public class ControleFolgas {
 
     public static void main(String[] args) {
-        new JanelaPrincipalGUI().setVisible(true);
+        new LoginGUI().setVisible(true);
     }
 }

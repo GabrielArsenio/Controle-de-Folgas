@@ -36,6 +36,14 @@ public class Usuario implements Serializable {
     public Usuario() {
     }
 
+    public Usuario(String nome, String usuario, String senha, Funcionario funionario, int nivel) {
+        this.nome = nome;
+        this.usuario = usuario;
+        this.senha = senha;
+        this.funionario = funionario;
+        this.nivel = nivel;
+    }
+
     @Override
     public String toString() {
         return nome;

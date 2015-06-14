@@ -10,4 +10,8 @@ import model.Usuario;
 public interface UsuarioDAO extends DAO<Usuario, Integer> {
 
     List<Usuario> pesquisarNome(String nome);
+
+    int getUsuariosCount();
+    
+    Usuario getUsuario(String usuario, String senha);
 }
