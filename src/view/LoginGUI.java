@@ -1,10 +1,6 @@
 package view;
 
-import controller.Login;
 import controller.UsuarioController;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.JOptionPane;
 import model.Usuario;
 
 /**
@@ -134,7 +130,7 @@ public class LoginGUI extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    
+
     private void btEntrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btEntrarActionPerformed
         Usuario usuario;
 
@@ -142,15 +138,16 @@ public class LoginGUI extends javax.swing.JFrame {
         txUsuario.setEnabled(false);
         txSenha.setEnabled(false);
         //pesquisar como fazer alteções na GUI durante a execução
-        
+
         usuario = UsuarioController.validarLogin(txUsuario.getText(), txSenha.getText());
 
         if (usuario != null) {
-            new JanelaPrincipalGUI().setVisible(true);
+            new JanelaPrincipalGUI(usuario).setVisible(true);
             this.dispose();
         } else {
             txUsuario.setEnabled(true);
             txSenha.setEnabled(true);
+            txSenha.grabFocus();
             lbStatus.setText("Usuário ou senha incorretos");
         }
     }//GEN-LAST:event_btEntrarActionPerformed

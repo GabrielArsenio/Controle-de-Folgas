@@ -1,6 +1,7 @@
 package view;
 
 import javax.swing.JOptionPane;
+import model.Usuario;
 
 /**
  *
@@ -8,11 +9,12 @@ import javax.swing.JOptionPane;
  */
 public class JanelaPrincipalGUI extends javax.swing.JFrame {
 
+    private final Usuario usuarioLogado;
     private FuncionarioGUI janelaFuncionario;
     private AreaGUI janelaArea;
     private UsuarioGUI janelaUsuario;
 
-    public JanelaPrincipalGUI() {
+    public JanelaPrincipalGUI(Usuario usuario) {
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
@@ -27,6 +29,8 @@ public class JanelaPrincipalGUI extends javax.swing.JFrame {
         //</editor-fold>
         initComponents();
 
+        this.usuarioLogado = usuario;
+        this.setTitle(usuarioLogado.getNome() + " - " + this.getTitle());
         this.setExtendedState(JanelaPrincipalGUI.MAXIMIZED_BOTH);
     }
 
@@ -156,16 +160,16 @@ public class JanelaPrincipalGUI extends javax.swing.JFrame {
         if (janelaUsuario != null) {
             janelaUsuario.dispose();
         }
-        janelaUsuario = new UsuarioGUI();
+        janelaUsuario = new UsuarioGUI(usuarioLogado);
         janelaUsuario.setVisible(true);
     }//GEN-LAST:event_itemUsuarioActionPerformed
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
-        int opcao = JOptionPane.showConfirmDialog(null, "Deseja sair?");
-
-        if (opcao == JOptionPane.YES_OPTION) {
-            this.dispose();
-        }
+//        int opcao = JOptionPane.showConfirmDialog(null, "Deseja sair?");
+//
+//        if (opcao == JOptionPane.YES_OPTION) {
+//            this.dispose();
+//        }
     }//GEN-LAST:event_formWindowClosing
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuBar barraMenu;

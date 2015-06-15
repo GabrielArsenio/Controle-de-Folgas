@@ -57,10 +57,10 @@ public abstract class UsuarioController {
     }
 
     public static Usuario validarLogin(String usuario, String senha) {
-        Usuario user = null;
+        Usuario user;
         
         if (getUsuariosCount() == 0) {
-            user = new Usuario("Administrador", "admin", "admin", null, 0);
+            user = new Usuario("Administrador", "admin", "admin", 0);
             user = UsuarioController.salvar(user);
         } else {
             user = UsuarioController.buscarUsuario(usuario, senha);

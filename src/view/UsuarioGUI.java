@@ -1,7 +1,9 @@
 package view;
 
 import controller.UsuarioController;
+import java.awt.Color;
 import java.util.List;
+import javax.swing.JInternalFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
@@ -15,14 +17,17 @@ import static util.Validadores.*;
  */
 public class UsuarioGUI extends javax.swing.JFrame {
 
-    private final int qtdRegistros = 0;
+    private Usuario usuarioLogado;
+    private char modo; // I - Inclusao, M - Manutenção/Alteração
+    private int qtdRegistros = 0;
     private int pagina;
     private List<Usuario> usuarios;
+    private NovaSenhaGUI novaSenhaGUI = new NovaSenhaGUI();
 
     private DefaultTableModel modelo;
     private JTable tabela;
 
-    public UsuarioGUI() {
+    public UsuarioGUI(Usuario usuarioLogado) {
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
@@ -38,6 +43,7 @@ public class UsuarioGUI extends javax.swing.JFrame {
         initComponents();
         setLocationRelativeTo(null);
 
+        this.usuarioLogado = usuarioLogado;
         this.criarTabela();
 
 //        this.manutencaoRegistro(null);
@@ -50,7 +56,7 @@ public class UsuarioGUI extends javax.swing.JFrame {
         modelo.addColumn("Código");
         modelo.addColumn("Nome");
         modelo.addColumn("Usuário");
-        modelo.addColumn("Área");
+//        modelo.addColumn("Área");
 
         preencherTabela(0, qtdRegistros);
 
@@ -65,15 +71,16 @@ public class UsuarioGUI extends javax.swing.JFrame {
         //Configurações
         scrollConsulta.setViewportView(tabela);
         tabela.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        System.out.println(tabela.getRowCount());
+        inclusaoRegistro();
 //        tabela.addRowSelectionInterval(0, 0);
     }
 
     /* Busca no banco e adiciona as linhas */
     private void preencherTabela(int min, int max) {
-        usuarios = new UsuarioController().listarTodos(min, max);
+        usuarios = UsuarioController.listarTodos(min, max);
 
         for (Usuario u : usuarios) {
+
             modelo.addRow(new Object[]{
                 u.getCodigo(), u.getNome(), u.getUsuario(), "u.getArea()"
             });
@@ -81,100 +88,130 @@ public class UsuarioGUI extends javax.swing.JFrame {
     }
 
     private void inclusaoRegistro() {
+        modo = 'I';
         txCodigo.setText(null);
         txNome.setText(null);
-        txCodigoArea.setText(null);
         txUsuario.setText(null);
-        txSenha.setText(null);
         txNome.grabFocus();
+        lbTitulo.setText("Usuário - Inclusão");
+
+        cbNivel.removeAllItems();
+        switch (usuarioLogado.getNivel()) {
+            case 0:
+                cbNivel.addItem("Administrador");
+                cbNivel.addItem("Coordenador");
+                cbNivel.addItem("Funcionário");
+                break;
+            case 1:
+                cbNivel.addItem("Coordenador");
+                cbNivel.addItem("Funcionário");
+                break;
+            case 2:
+                cbNivel.addItem("Funcionário");
+                break;
+        }
     }
 
     private void manutencaoRegistro(java.awt.event.MouseEvent evt) {
         Usuario usu = usuarios.get(tabela.getSelectedRow());
 
-        try {
-            txCodigo.setText(String.valueOf(usu.getCodigo()));
-            txNome.setText(usu.getNome());
-            txUsuario.setText(usu.getUsuario());
-            txSenha.setText(usu.getSenha());
-//            txCodigoArea.setText(String.valueOf(usu.getArea().getCodigo()));
-        } catch (NullPointerException ex) {
-            System.out.println("Erro: Campo nulo.");
-        }
+        modo = 'M';
+        lbTitulo.setText("Usuário - Manutenção");
+        txCodigo.setText(String.valueOf(usu.getCodigo()));
+        txNome.setText(usu.getNome());
+        txUsuario.setText(usu.getUsuario());
+        cbNivel.setSelectedIndex(usu.getNivel());
     }
 
     private void salvarRegistro() {
         int index;
 
-        if (validaCampoVazio(txNome.getText())
-                || validaCampoVazio(txCodigoArea.getText())
-                || validaCampoVazio(txUsuario.getText())
-                || validaCampoVazio(txSenha.getText())
-                || somenteNumeros(txCodigoArea.getText())) {
-
-            Usuario u = new Usuario();
-            if (validaCampoVazio(txCodigo.getText())) {
-                u.setCodigo(Integer.parseInt(txCodigo.getText()));
-            }
-            u.setNome(txNome.getText());
-            u.setUsuario(txUsuario.getText());
-            u.setSenha(txSenha.getText());
-            //u.setArea(null);
-
-            index = (u.getCodigo() > 0 ? tabela.getSelectedRow() : -1);
-
-            u = new UsuarioController().salvar(u);
-
-            // Se verdadeiro é porque registrou certo
-            if (u != null) {
-                // Se for verdadeiro é alteração
-                if (index > -1) {
-                    usuarios.set(index, u);
-                } else {
-                    usuarios.add(u);
-                    txCodigo.setText(String.valueOf(u.getCodigo()));
-                    index++;
-                }
-
-                modelo.setNumRows(0);
-
-                for (Usuario us : usuarios) {
-                    modelo.addRow(new Object[]{
-                        us.getCodigo(), us.getNome(), us.getUsuario(), "us.getArea()"
-                    });
-                }
-
-                tabela.addRowSelectionInterval(index, index);
-            }
-        } else {
-            JOptionPane.showMessageDialog(null, "Informações inválidas, favor verificar.");
+        if (!validaCampoVazio(txNome.getText())) {
+            lbStatus.setText("Informe o nome.");
+            txNome.grabFocus();
+            return;
         }
+
+        if (!validaCampoVazio(txUsuario.getText())) {
+            lbStatus.setText("Informe o usuário.");
+            txUsuario.grabFocus();
+            return;
+        }
+
+        if (!novaSenhaGUI.isSenhaValida()) {
+            lbStatus.setText("Verifique sua senha.");
+            novaSenhaGUI.setLocationRelativeTo(this);
+            novaSenhaGUI.setVisible(true);
+            return;
+        }
+
+        Usuario u = new Usuario();
+        if (validaCampoVazio(txCodigo.getText())) {
+            u.setCodigo(Integer.parseInt(txCodigo.getText()));
+        }
+        u.setNome(txNome.getText());
+        u.setNivel(cbNivel.getSelectedIndex());
+        u.setUsuario(txUsuario.getText());
+        u.setSenha(novaSenhaGUI.getSenha());
+
+        index = (u.getCodigo() > 0 ? tabela.getSelectedRow() : -1);
+
+        u = UsuarioController.salvar(u);
+
+        if (u == null) {
+            System.out.println("Erro ao registrar: UsuarioGUI.salvarRegistro()");
+            return;
+        }
+
+        // Se for verdadeiro é alteração
+        if (index > -1) {
+            usuarios.set(index, u);
+        } else {
+            usuarios.add(u);
+            txCodigo.setText(String.valueOf(u.getCodigo()));
+            index++;
+        }
+
+        modelo.setNumRows(0);
+
+        for (Usuario us : usuarios) {
+            modelo.addRow(new Object[]{
+                us.getCodigo(), us.getNome(), us.getUsuario(), "us.getArea()"
+            });
+        }
+
+        lbStatus.setText("");
+        tabela.addRowSelectionInterval(index, index);
     }
 
     private void excluirRegistro() {
         int linha = -1;
         linha = tabela.getSelectedRow();
 
-        if (JOptionPane.showConfirmDialog(null, "Confirma exclusão do registro?")
-                == JOptionPane.YES_OPTION) {
-            if (linha > -1) {
-                int codigo = (int) tabela.getValueAt(linha, 0);
+        if (JOptionPane.showConfirmDialog(this, "Confirma exclusão do registro?")
+                != JOptionPane.YES_OPTION) {
+            return;
+        }
 
-                if (new UsuarioController().excluir(codigo)) {
-                    usuarios.remove(linha);
-                    modelo.setNumRows(0);
+        if (!(linha > -1)) { // se NÃO for maior que -1
+            JOptionPane.showMessageDialog(this, "Nenhum registro foi selecionado");
+            return;
+        }
 
-                    for (Usuario us : usuarios) {
-                        modelo.addRow(new Object[]{
-                            us.getCodigo(), us.getNome(), us.getUsuario(), "us.getArea()"
-                        });
-                    }
-                } else {
-                    JOptionPane.showMessageDialog(null, "Erro ao excluir.");
-                }
-            } else {
-                JOptionPane.showMessageDialog(null, "Nenhuma linha foi selecionada.");
-            }
+        int codigo = (int) tabela.getValueAt(linha, 0);
+
+        if (!UsuarioController.excluir(codigo)) {
+            JOptionPane.showMessageDialog(this, "Erro ao excluir");
+            return;
+        }
+
+        usuarios.remove(linha);
+        modelo.setNumRows(0);
+
+        for (Usuario us : usuarios) {
+            modelo.addRow(new Object[]{
+                us.getCodigo(), us.getNome(), us.getUsuario(), "us.getArea()"
+            });
         }
     }
 
@@ -209,14 +246,9 @@ public class UsuarioGUI extends javax.swing.JFrame {
         txCodigo = new javax.swing.JTextField();
         lbNome = new javax.swing.JLabel();
         txNome = new javax.swing.JTextField();
-        lbArea = new javax.swing.JLabel();
-        txCodigoArea = new javax.swing.JTextField();
-        txNomeArea = new javax.swing.JTextField();
-        btArea = new javax.swing.JButton();
+        lbNivel = new javax.swing.JLabel();
         lbUsuario = new javax.swing.JLabel();
         txUsuario = new javax.swing.JTextField();
-        lbSenha = new javax.swing.JLabel();
-        txSenha = new javax.swing.JPasswordField();
         painelConsulta = new javax.swing.JPanel();
         scrollConsulta = new javax.swing.JScrollPane();
         btAnterior = new javax.swing.JButton();
@@ -228,9 +260,13 @@ public class UsuarioGUI extends javax.swing.JFrame {
         btNovo = new javax.swing.JButton();
         btExcluir = new javax.swing.JButton();
         sp1 = new javax.swing.JSeparator();
+        btSenha = new javax.swing.JButton();
+        lbStatus = new javax.swing.JLabel();
+        cbNivel = new javax.swing.JComboBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Usuário");
+        setResizable(false);
 
         lbTitulo.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         lbTitulo.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -252,20 +288,9 @@ public class UsuarioGUI extends javax.swing.JFrame {
         txNome.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         txNome.setText("Nome do Usuário");
 
-        lbArea.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        lbArea.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lbArea.setText("Área:");
-
-        txCodigoArea.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        txCodigoArea.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        txCodigoArea.setText("1");
-
-        txNomeArea.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        txNomeArea.setText("Área de Atuação do Usuário");
-        txNomeArea.setEnabled(false);
-
-        btArea.setText("Buscar");
-        btArea.setToolTipText("Buscar área");
+        lbNivel.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        lbNivel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lbNivel.setText("Nível:");
 
         lbUsuario.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         lbUsuario.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
@@ -273,12 +298,6 @@ public class UsuarioGUI extends javax.swing.JFrame {
 
         txUsuario.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         txUsuario.setText("Login");
-
-        lbSenha.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        lbSenha.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lbSenha.setText("Senha:");
-
-        txSenha.setText("Senha");
 
         painelConsulta.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
@@ -335,7 +354,7 @@ public class UsuarioGUI extends javax.swing.JFrame {
                     .addComponent(cbFiltro, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txPesquisa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(scrollConsulta, javax.swing.GroupLayout.DEFAULT_SIZE, 380, Short.MAX_VALUE))
+                .addComponent(scrollConsulta, javax.swing.GroupLayout.DEFAULT_SIZE, 359, Short.MAX_VALUE))
         );
 
         btSalvar.setText("Salvar");
@@ -364,6 +383,20 @@ public class UsuarioGUI extends javax.swing.JFrame {
 
         sp1.setOrientation(javax.swing.SwingConstants.VERTICAL);
 
+        btSenha.setText("Alterar Senha");
+        btSenha.setToolTipText("Salvar usuário");
+        btSenha.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btSenhaActionPerformed(evt);
+            }
+        });
+
+        lbStatus.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        lbStatus.setForeground(java.awt.Color.red);
+        lbStatus.setText(" ");
+
+        cbNivel.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
         javax.swing.GroupLayout painelFundoLayout = new javax.swing.GroupLayout(painelFundo);
         painelFundo.setLayout(painelFundoLayout);
         painelFundoLayout.setHorizontalGroup(
@@ -383,7 +416,7 @@ public class UsuarioGUI extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btExcluir, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(painelFundoLayout.createSequentialGroup()
-                        .addGroup(painelFundoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addGroup(painelFundoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(painelFundoLayout.createSequentialGroup()
                                 .addGroup(painelFundoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addComponent(lbNome, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -397,18 +430,13 @@ public class UsuarioGUI extends javax.swing.JFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(txUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(lbSenha)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(txSenha)))
+                                .addComponent(btSenha)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(lbArea, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(lbNivel, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txCodigoArea, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txNomeArea, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btArea)
-                        .addGap(0, 43, Short.MAX_VALUE)))
+                        .addComponent(cbNivel, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 258, Short.MAX_VALUE))
+                    .addComponent(lbStatus, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         painelFundoLayout.setVerticalGroup(
@@ -417,6 +445,8 @@ public class UsuarioGUI extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(lbTitulo)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(lbStatus)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(painelFundoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lbCodigo)
                     .addComponent(txCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -424,24 +454,21 @@ public class UsuarioGUI extends javax.swing.JFrame {
                 .addGroup(painelFundoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lbNome)
                     .addComponent(txNome, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lbArea)
-                    .addComponent(txCodigoArea, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txNomeArea, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btArea))
+                    .addComponent(lbNivel)
+                    .addComponent(cbNivel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(painelFundoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lbUsuario)
                     .addComponent(txUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lbSenha)
-                    .addComponent(txSenha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btSenha))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(painelFundoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(painelFundoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(btSalvar)
                         .addComponent(btNovo)
                         .addComponent(btExcluir))
-                    .addComponent(sp1))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                    .addComponent(sp1, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(painelConsulta, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
@@ -479,19 +506,26 @@ public class UsuarioGUI extends javax.swing.JFrame {
     private void btNovoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btNovoActionPerformed
         inclusaoRegistro();
     }//GEN-LAST:event_btNovoActionPerformed
+
+    private void btSenhaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btSenhaActionPerformed
+        novaSenhaGUI.setLocationRelativeTo(this);
+        novaSenhaGUI.setVisible(true);
+    }//GEN-LAST:event_btSenhaActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btAnterior;
-    private javax.swing.JButton btArea;
     private javax.swing.JButton btExcluir;
     private javax.swing.JButton btNovo;
     private javax.swing.JButton btProximo;
     private javax.swing.JButton btSalvar;
+    private javax.swing.JButton btSenha;
     private javax.swing.JComboBox cbFiltro;
-    private javax.swing.JLabel lbArea;
+    private javax.swing.JComboBox cbNivel;
     private javax.swing.JLabel lbCodigo;
     private javax.swing.JLabel lbContaPagina;
+    private javax.swing.JLabel lbNivel;
     private javax.swing.JLabel lbNome;
-    private javax.swing.JLabel lbSenha;
+    private javax.swing.JLabel lbStatus;
     private javax.swing.JLabel lbTitulo;
     private javax.swing.JLabel lbUsuario;
     private javax.swing.JPanel painelConsulta;
@@ -499,11 +533,8 @@ public class UsuarioGUI extends javax.swing.JFrame {
     private javax.swing.JScrollPane scrollConsulta;
     private javax.swing.JSeparator sp1;
     private javax.swing.JTextField txCodigo;
-    private javax.swing.JTextField txCodigoArea;
     private javax.swing.JTextField txNome;
-    private javax.swing.JTextField txNomeArea;
     private javax.swing.JTextField txPesquisa;
-    private javax.swing.JPasswordField txSenha;
     private javax.swing.JTextField txUsuario;
     // End of variables declaration//GEN-END:variables
 }

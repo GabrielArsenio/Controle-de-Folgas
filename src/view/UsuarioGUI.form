@@ -4,6 +4,7 @@
   <Properties>
     <Property name="defaultCloseOperation" type="int" value="2"/>
     <Property name="title" type="java.lang.String" value="Usu&#xe1;rio"/>
+    <Property name="resizable" type="boolean" value="false"/>
   </Properties>
   <SyntheticProperties>
     <SyntheticProperty name="formSizePolicy" type="int" value="1"/>
@@ -55,7 +56,7 @@
                           <Component id="btExcluir" min="-2" pref="70" max="-2" attributes="0"/>
                       </Group>
                       <Group type="102" attributes="0">
-                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                          <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" alignment="0" attributes="0">
                                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
                                       <Component id="lbNome" min="-2" pref="51" max="-2" attributes="0"/>
@@ -72,21 +73,16 @@
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Component id="txUsuario" min="-2" pref="110" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="lbSenha" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="txSenha" max="32767" attributes="0"/>
+                                  <Component id="btSenha" min="-2" max="-2" attributes="0"/>
                               </Group>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="lbArea" min="-2" pref="51" max="-2" attributes="0"/>
+                          <Component id="lbNivel" min="-2" pref="51" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="txCodigoArea" min="-2" pref="73" max="-2" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="txNomeArea" min="-2" pref="198" max="-2" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="btArea" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace min="0" pref="43" max="32767" attributes="0"/>
+                          <Component id="cbNivel" min="-2" pref="129" max="-2" attributes="0"/>
+                          <EmptySpace min="0" pref="258" max="32767" attributes="0"/>
                       </Group>
+                      <Component id="lbStatus" alignment="0" max="32767" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
@@ -97,7 +93,9 @@
               <Group type="102" alignment="1" attributes="0">
                   <EmptySpace min="-2" max="-2" attributes="0"/>
                   <Component id="lbTitulo" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace type="unrelated" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                  <Component id="lbStatus" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="lbCodigo" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="txCodigo" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -106,30 +104,27 @@
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="lbNome" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="txNome" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="lbArea" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="txCodigoArea" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="txNomeArea" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="btArea" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="lbNivel" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="cbNivel" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace type="unrelated" min="-2" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="lbUsuario" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="txUsuario" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="lbSenha" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="txSenha" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="btSenha" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace type="unrelated" min="-2" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                      <Group type="103" groupAlignment="3" attributes="0">
+                      <Group type="103" alignment="0" groupAlignment="3" attributes="0">
                           <Component id="btSalvar" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="btNovo" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="btExcluir" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <Component id="sp1" max="32767" attributes="0"/>
+                      <Component id="sp1" min="-2" pref="23" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace type="unrelated" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
                   <Component id="painelConsulta" max="32767" attributes="0"/>
-                  <EmptySpace min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -180,37 +175,13 @@
             <Property name="text" type="java.lang.String" value="Nome do Usu&#xe1;rio"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JLabel" name="lbArea">
+        <Component class="javax.swing.JLabel" name="lbNivel">
           <Properties>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
               <Font name="Tahoma" size="12" style="0"/>
             </Property>
             <Property name="horizontalAlignment" type="int" value="4"/>
-            <Property name="text" type="java.lang.String" value="&#xc1;rea:"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JTextField" name="txCodigoArea">
-          <Properties>
-            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-              <Font name="Tahoma" size="12" style="0"/>
-            </Property>
-            <Property name="horizontalAlignment" type="int" value="4"/>
-            <Property name="text" type="java.lang.String" value="1"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JTextField" name="txNomeArea">
-          <Properties>
-            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-              <Font name="Tahoma" size="12" style="0"/>
-            </Property>
-            <Property name="text" type="java.lang.String" value="&#xc1;rea de Atua&#xe7;&#xe3;o do Usu&#xe1;rio"/>
-            <Property name="enabled" type="boolean" value="false"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JButton" name="btArea">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="Buscar"/>
-            <Property name="toolTipText" type="java.lang.String" value="Buscar &#xe1;rea"/>
+            <Property name="text" type="java.lang.String" value="N&#xed;vel:"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="lbUsuario">
@@ -228,20 +199,6 @@
               <Font name="Tahoma" size="12" style="0"/>
             </Property>
             <Property name="text" type="java.lang.String" value="Login"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JLabel" name="lbSenha">
-          <Properties>
-            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-              <Font name="Tahoma" size="12" style="0"/>
-            </Property>
-            <Property name="horizontalAlignment" type="int" value="4"/>
-            <Property name="text" type="java.lang.String" value="Senha:"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JPasswordField" name="txSenha">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="Senha"/>
           </Properties>
         </Component>
         <Container class="javax.swing.JPanel" name="painelConsulta">
@@ -281,7 +238,7 @@
                           <Component id="txPesquisa" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="scrollConsulta" pref="380" max="32767" attributes="0"/>
+                      <Component id="scrollConsulta" pref="359" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -370,6 +327,38 @@
         <Component class="javax.swing.JSeparator" name="sp1">
           <Properties>
             <Property name="orientation" type="int" value="1"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JButton" name="btSenha">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Alterar Senha"/>
+            <Property name="toolTipText" type="java.lang.String" value="Salvar usu&#xe1;rio"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btSenhaActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JLabel" name="lbStatus">
+          <Properties>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="Tahoma" size="12" style="0"/>
+            </Property>
+            <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+              <Color blue="0" green="0" id="red" palette="1" red="ff" type="palette"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="&#xa0;"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JComboBox" name="cbNivel">
+          <Properties>
+            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+              <StringArray count="4">
+                <StringItem index="0" value="Item 1"/>
+                <StringItem index="1" value="Item 2"/>
+                <StringItem index="2" value="Item 3"/>
+                <StringItem index="3" value="Item 4"/>
+              </StringArray>
+            </Property>
           </Properties>
         </Component>
       </SubComponents>

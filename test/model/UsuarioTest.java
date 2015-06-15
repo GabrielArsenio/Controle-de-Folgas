@@ -37,20 +37,20 @@ public class UsuarioTest {
 
     @Test
     public void insere50() {
-        Usuario u = new UsuarioController().buscarUltimo();
+        Usuario u = UsuarioController.buscarUltimo();
         int aux = (u != null ? u.getCodigo() : 0);
 
         for (int i = aux + 1; i < aux + 50; i++) {
             u = new Usuario();
             u.setNome("Usuário teste " + i);
             u.setUsuario("Login " + i);
-            new UsuarioController().salvar(u);
+            UsuarioController.salvar(u);
         }
     }
 
     @Test
     public void buscaUltimo() {
-        Usuario u = new UsuarioController().buscarUltimo();
+        Usuario u = UsuarioController.buscarUltimo();
 //        JOptionPane.showMessageDialog(null, u != null ? u.getCodigo() : 0);
     }
 

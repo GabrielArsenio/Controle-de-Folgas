@@ -68,7 +68,7 @@ public abstract class DAOJPA<T, I> implements DAO<T, I> {
     public List<T> getAll(Class<T> classe, int min, int max) {
         // 'x' é o alias, nome para a classe
         return getEntityManager().createQuery(
-                "select x from " + classe.getSimpleName() + " x")
+                "select x from " + classe.getSimpleName() + " x order by x.codigo desc")
                 .setFirstResult(min).setMaxResults(max).getResultList();
     }
 

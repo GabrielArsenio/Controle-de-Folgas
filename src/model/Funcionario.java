@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
@@ -28,9 +29,11 @@ public class Funcionario implements Serializable {
     private Date dataEfetivo;
     private char sexo;
     @ManyToOne
-    private Setor area;
-//    @Column(length = 50)
-//    private String funcao;
+    private Setor setor;
+    @ManyToOne
+    private Cargo cargo;
+    @OneToOne
+    private Usuario usuario;
     @Column(length = 15)
     private String telefone;
     @Column(length = 50)
@@ -50,6 +53,30 @@ public class Funcionario implements Serializable {
 
     public void setCodigo(int codigo) {
         this.codigo = codigo;
+    }
+
+    public Setor getSetor() {
+        return setor;
+    }
+
+    public void setSetor(Setor setor) {
+        this.setor = setor;
+    }
+
+    public Cargo getCargo() {
+        return cargo;
+    }
+
+    public void setCargo(Cargo cargo) {
+        this.cargo = cargo;
+    }
+
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
     }
 
     public String getNome() {
@@ -92,20 +119,12 @@ public class Funcionario implements Serializable {
     }
 
     public Setor getArea() {
-        return area;
+        return setor;
     }
 
     public void setArea(Setor area) {
-        this.area = area;
+        this.setor = area;
     }
-
-//    public String getFuncao() {
-//        return funcao;
-//    }
-//
-//    public void setFuncao(String funcao) {
-//        this.funcao = funcao;
-//    }
 
     public String getTelefone() {
         return telefone;
