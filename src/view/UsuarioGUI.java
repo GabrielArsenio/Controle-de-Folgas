@@ -94,6 +94,7 @@ public class UsuarioGUI extends javax.swing.JFrame {
         txUsuario.setText(null);
         txNome.grabFocus();
         lbTitulo.setText("Usuário - Inclusão");
+        lbStatus.setText("");
 
         cbNivel.removeAllItems();
         switch (usuarioLogado.getNivel()) {
@@ -187,6 +188,7 @@ public class UsuarioGUI extends javax.swing.JFrame {
     private void excluirRegistro() {
         int linha = -1;
         linha = tabela.getSelectedRow();
+        Usuario usuEx;
 
         if (JOptionPane.showConfirmDialog(this, "Confirma exclusão do registro?")
                 != JOptionPane.YES_OPTION) {
@@ -199,6 +201,17 @@ public class UsuarioGUI extends javax.swing.JFrame {
         }
 
         int codigo = (int) tabela.getValueAt(linha, 0);
+        usuEx = usuarios.get(linha);
+
+        if (usuarioLogado.getCodigo() == usuEx.getCodigo()) {
+            JOptionPane.showMessageDialog(this, "Você não pode excluir o seu usuário");
+            return;
+        }
+
+        if (usuarioLogado.getNivel() > usuEx.getNivel()) {
+            JOptionPane.showMessageDialog(this, "Você não tem privilégio pra excluir esse usuário");
+            return;
+        }
 
         if (!UsuarioController.excluir(codigo)) {
             JOptionPane.showMessageDialog(this, "Erro ao excluir");
@@ -207,6 +220,7 @@ public class UsuarioGUI extends javax.swing.JFrame {
 
         usuarios.remove(linha);
         modelo.setNumRows(0);
+        this.inclusaoRegistro();
 
         for (Usuario us : usuarios) {
             modelo.addRow(new Object[]{
