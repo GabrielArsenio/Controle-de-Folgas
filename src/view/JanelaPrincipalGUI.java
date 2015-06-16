@@ -1,6 +1,7 @@
 package view;
 
 import controller.Sessao;
+import javax.swing.JFrame;
 import model.Usuario;
 
 /**
@@ -10,9 +11,9 @@ import model.Usuario;
 public class JanelaPrincipalGUI extends javax.swing.JFrame {
 
     private final Usuario usuarioLogado = Sessao.getInstance().getUsuario();
-    private FuncionarioGUI janelaFuncionario;
-    private AreaGUI janelaArea;
-    private UsuarioGUI janelaUsuario;
+    private UsuarioGUI usuarioGUI;
+    private CargoGUI cargoGUI;
+    private FuncionarioGUI funcionarioGUI;
 
     public JanelaPrincipalGUI() {
         initComponents();
@@ -29,7 +30,7 @@ public class JanelaPrincipalGUI extends javax.swing.JFrame {
         lbTitulo = new javax.swing.JLabel();
         barraMenu = new javax.swing.JMenuBar();
         menuCadastros = new javax.swing.JMenu();
-        itemArea = new javax.swing.JMenuItem();
+        itemCargo = new javax.swing.JMenuItem();
         itemFuncionario = new javax.swing.JMenuItem();
         itemUsuario = new javax.swing.JMenuItem();
         menuConsultas = new javax.swing.JMenu();
@@ -68,13 +69,13 @@ public class JanelaPrincipalGUI extends javax.swing.JFrame {
 
         menuCadastros.setText("Cadastros");
 
-        itemArea.setText("Área");
-        itemArea.addActionListener(new java.awt.event.ActionListener() {
+        itemCargo.setText("Cargo");
+        itemCargo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                itemAreaActionPerformed(evt);
+                itemCargoActionPerformed(evt);
             }
         });
-        menuCadastros.add(itemArea);
+        menuCadastros.add(itemCargo);
 
         itemFuncionario.setText("Funcionário");
         itemFuncionario.addActionListener(new java.awt.event.ActionListener() {
@@ -128,27 +129,27 @@ public class JanelaPrincipalGUI extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void itemFuncionarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemFuncionarioActionPerformed
-        if (janelaFuncionario != null) {
-            janelaFuncionario.dispose();
+        if (funcionarioGUI != null) {
+            funcionarioGUI.dispose();
         }
-        janelaFuncionario = new FuncionarioGUI();
-        janelaFuncionario.setVisible(true);
+        funcionarioGUI = new FuncionarioGUI();
+        funcionarioGUI.setVisible(true);
     }//GEN-LAST:event_itemFuncionarioActionPerformed
 
-    private void itemAreaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemAreaActionPerformed
-        if (janelaArea != null) {
-            janelaArea.dispose();
+    private void itemCargoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemCargoActionPerformed
+        if (cargoGUI != null) {
+            cargoGUI.dispose();
         }
-        janelaArea = new AreaGUI();
-        janelaArea.setVisible(true);
-    }//GEN-LAST:event_itemAreaActionPerformed
+        cargoGUI = new CargoGUI();
+        cargoGUI.setVisible(true);
+    }//GEN-LAST:event_itemCargoActionPerformed
 
     private void itemUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemUsuarioActionPerformed
-        if (janelaUsuario != null) {
-            janelaUsuario.dispose();
+        if (usuarioGUI != null) {
+            usuarioGUI.dispose();
         }
-        janelaUsuario = new UsuarioGUI();
-        janelaUsuario.setVisible(true);
+        usuarioGUI = new UsuarioGUI();
+        usuarioGUI.setVisible(true);
     }//GEN-LAST:event_itemUsuarioActionPerformed
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
@@ -160,7 +161,7 @@ public class JanelaPrincipalGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_formWindowClosing
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuBar barraMenu;
-    private javax.swing.JMenuItem itemArea;
+    private javax.swing.JMenuItem itemCargo;
     private javax.swing.JMenuItem itemConsFolga;
     private javax.swing.JMenuItem itemDesbloqFolga;
     private javax.swing.JMenuItem itemFuncionario;

@@ -1,6 +1,6 @@
 package dao.jpa;
 
-import dao.AreaDAO;
+import dao.SetorDAO;
 import java.util.List;
 import model.Setor;
 
@@ -8,7 +8,7 @@ import model.Setor;
  *
  * @author gabriel_arsenio
  */
-public class AreaDAOJPA extends DAOJPA<Setor, Integer> implements AreaDAO {
+public class SetorDAOJPA extends DAOJPA<Setor, Integer> implements SetorDAO {
 
     @Override
     public List<Setor> pesquisarNome(String nome) {

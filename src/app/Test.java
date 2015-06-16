@@ -1,6 +1,8 @@
 package app;
 
+import controller.CargoController;
 import controller.UsuarioController;
+import model.Cargo;
 
 /**
  *
@@ -12,7 +14,9 @@ public class Test {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        System.out.println(UsuarioController.buscarUsuario("admin", "admin").getNome());
+        for (int i = 0; i < 10; i++) {
+            CargoController.salvar(new Cargo("Cargo", "Descricao"));            
+        }
     }
     
 }

@@ -9,12 +9,12 @@
             <Property name="text" type="java.lang.String" value="Cadastros"/>
           </Properties>
           <SubComponents>
-            <MenuItem class="javax.swing.JMenuItem" name="itemArea">
+            <MenuItem class="javax.swing.JMenuItem" name="itemCargo">
               <Properties>
-                <Property name="text" type="java.lang.String" value="&#xc1;rea"/>
+                <Property name="text" type="java.lang.String" value="Cargo"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="itemAreaActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="itemCargoActionPerformed"/>
               </Events>
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="itemFuncionario">
