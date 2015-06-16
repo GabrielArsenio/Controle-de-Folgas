@@ -17,10 +17,17 @@ public class Setor implements Serializable {
     @GeneratedValue
     private int codigo;
     private String nome;
+    private String descricao;
     @ManyToOne
     private Funcionario coordenador;
 
     public Setor() {
+    }
+
+    public Setor(String nome, String descricao, Funcionario coordenador) {
+        this.nome = nome;
+        this.descricao = descricao;
+        this.coordenador = coordenador;
     }
 
     @Override
@@ -42,6 +49,14 @@ public class Setor implements Serializable {
 
     public void setNome(String nome) {
         this.nome = nome;
+    }
+
+    public String getDescricao() {
+        return descricao;
+    }
+
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
     }
 
     public Funcionario getCoordenador() {

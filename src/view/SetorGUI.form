@@ -114,11 +114,19 @@
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" attributes="0">
-                                  <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="txCodigo" min="-2" pref="73" max="-2" attributes="0"/>
-                                      <Component id="txNome" min="-2" pref="279" max="-2" attributes="0"/>
-                                  </Group>
+                                  <Component id="txCodigo" min="-2" pref="73" max="-2" attributes="0"/>
                                   <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                              </Group>
+                              <Group type="102" attributes="0">
+                                  <Component id="txNome" max="32767" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="lbCoordenador" min="-2" pref="82" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="txCoordenadorCodigo" min="-2" pref="73" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="txCoordenadorNome" min="-2" pref="198" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="btCoordenador" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <Component id="txDescricao" max="32767" attributes="0"/>
                           </Group>
@@ -144,6 +152,12 @@
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="lbNome" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="txNome" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Group type="103" alignment="3" groupAlignment="3" attributes="0">
+                          <Component id="lbCoordenador" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="txCoordenadorCodigo" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="txCoordenadorNome" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="btCoordenador" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
                   </Group>
                   <EmptySpace type="unrelated" min="-2" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
@@ -173,7 +187,7 @@
               <Font name="Tahoma" size="18" style="0"/>
             </Property>
             <Property name="horizontalAlignment" type="int" value="0"/>
-            <Property name="text" type="java.lang.String" value="Cargo"/>
+            <Property name="text" type="java.lang.String" value="Setor / &#xc1;rea"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="lbCodigo">
@@ -246,7 +260,7 @@
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="scrollConsulta" alignment="1" pref="390" max="32767" attributes="0"/>
+                  <Component id="scrollConsulta" alignment="1" pref="388" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
           </Layout>
@@ -299,6 +313,42 @@
             </Property>
             <Property name="text" type="java.lang.String" value="&#xa0;"/>
           </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="lbCoordenador">
+          <Properties>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="Tahoma" size="12" style="0"/>
+            </Property>
+            <Property name="horizontalAlignment" type="int" value="4"/>
+            <Property name="text" type="java.lang.String" value="Coordenador:"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JTextField" name="txCoordenadorCodigo">
+          <Properties>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="Tahoma" size="12" style="0"/>
+            </Property>
+            <Property name="horizontalAlignment" type="int" value="4"/>
+            <Property name="text" type="java.lang.String" value="1"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JTextField" name="txCoordenadorNome">
+          <Properties>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="Tahoma" size="12" style="0"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="Login de Acesso do Funcion&#xe1;rio"/>
+            <Property name="enabled" type="boolean" value="false"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JButton" name="btCoordenador">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Buscar"/>
+            <Property name="toolTipText" type="java.lang.String" value="Buscar &#xe1;rea"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btCoordenadorActionPerformed"/>
+          </Events>
         </Component>
       </SubComponents>
     </Container>

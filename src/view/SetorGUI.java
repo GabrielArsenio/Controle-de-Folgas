@@ -1,7 +1,9 @@
 package view;
 
 import controller.CargoController;
+import controller.FuncionarioController;
 import controller.Sessao;
+import controller.SetorController;
 import controller.UsuarioController;
 import java.util.List;
 import javax.swing.JOptionPane;
@@ -9,6 +11,8 @@ import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
 import model.Cargo;
+import model.Funcionario;
+import model.Setor;
 import model.Usuario;
 import static util.Validadores.*;
 
@@ -16,17 +20,17 @@ import static util.Validadores.*;
  *
  * @author Gabriel
  */
-public class CargoGUI extends javax.swing.JFrame {
+public class SetorGUI extends javax.swing.JFrame {
 
     private final Usuario usuarioLogado = Sessao.getInstance().getUsuario();
     private final int qtdRegistros = 50;
     private char modo; // I - Inclusao, M - Manutenção/Alteração
-    private List<Cargo> cargos;
+    private List<Setor> setores;
 
     private DefaultTableModel modelo;
     private JTable tabela;
 
-    public CargoGUI() {
+    public SetorGUI() {
         initComponents();
         setLocationRelativeTo(null);
         this.criarTabela();
@@ -38,7 +42,7 @@ public class CargoGUI extends javax.swing.JFrame {
 
         modelo.addColumn("Código");
         modelo.addColumn("Nome");
-        modelo.addColumn("Descrição");
+        modelo.addColumn("Coordenador");
 
         preencherTabela(0, qtdRegistros);
 
@@ -58,42 +62,53 @@ public class CargoGUI extends javax.swing.JFrame {
 
     /* Busca no banco e adiciona as linhas */
     private void preencherTabela(int min, int max) {
-        cargos = CargoController.listarTodos(min, max);
+        setores = SetorController.listarTodos(min, max);
 
-        for (Cargo c : cargos) {
-
+        for (Setor s : setores) {
+            try {
+                s.setCoordenador(FuncionarioController.buscarPorId(s.getCoordenador().getCodigo()));
+            } catch (NullPointerException e) {
+            }
             modelo.addRow(new Object[]{
-                c.getCodigo(), c.getNome(), c.getDescricao()
+                s.getCodigo(), s.getNome(), s.getCoordenador().getNome()
             });
         }
     }
 
     private void inclusaoRegistro() {
         modo = 'I';
-        lbTitulo.setText("Cargo - Inclusão");
+        lbTitulo.setText("Setor - Inclusão");
         lbStatus.setText("");
         txCodigo.setText(null);
         txNome.setText(null);
         txDescricao.setText(null);
+        txCoordenadorCodigo.setText(null);
+        txCoordenadorNome.setText(null);
         txNome.grabFocus();
     }
 
     private void manutencaoRegistro(java.awt.event.MouseEvent evt) {
-        Cargo cargoSelecionado = cargos.get(tabela.getSelectedRow());
+        Setor setorSelecionado = setores.get(tabela.getSelectedRow());
 
         modo = 'M';
-        lbTitulo.setText("Cargo - Manutenção");
+        lbTitulo.setText("Setor - Manutenção");
         lbStatus.setText("");
-        txCodigo.setText(String.valueOf(cargoSelecionado.getCodigo()));
-        txNome.setText(cargoSelecionado.getNome());
-        txDescricao.setText(cargoSelecionado.getDescricao());
+        txCodigo.setText(String.valueOf(setorSelecionado.getCodigo()));
+        txNome.setText(setorSelecionado.getNome());
+        txDescricao.setText(setorSelecionado.getDescricao());
+
+        if (setorSelecionado.getCoordenador() != null) {
+            txCoordenadorCodigo.setText(String.valueOf(setorSelecionado.getCoordenador().getCodigo()));
+            txCoordenadorNome.setText(setorSelecionado.getCoordenador().getNome());
+        }
     }
 
     private void salvarRegistro() {
         int index;
+        Funcionario coordenador;
 
         if (usuarioLogado.getNivel() > 1) {
-            lbStatus.setText("Você não tem privilégio para manipular cargos");
+            lbStatus.setText("Você não tem privilégio para manipular setores");
             return;
         }
 
@@ -103,36 +118,59 @@ public class CargoGUI extends javax.swing.JFrame {
             return;
         }
 
-        Cargo c = new Cargo();
-        if (validaCampoVazio(txCodigo.getText())) {
-            c.setCodigo(Integer.parseInt(txCodigo.getText()));
+        if (validaCampoVazio(txCoordenadorCodigo.getText())) {
+            if (!validaInt(txCoordenadorCodigo.getText())) {
+                lbStatus.setText("Informe o coordenador corretamente");
+                return;
+            }
+
+            coordenador = FuncionarioController.buscarPorId(Integer.parseInt(txCoordenadorCodigo.getText()));
+            if (coordenador == null) {
+                lbStatus.setText("Setor não encontrado");
+                return;
+            }
+
+            coordenador.setUsuario(UsuarioController.buscarPorId(coordenador.getUsuario().getCodigo()));
+            if (coordenador.getUsuario().getNivel() > 1) {
+                lbStatus.setText("Coordenador inválido, favor verificar login de acesso");
+                return;
+            }
         }
-        c.setNome(txNome.getText());
-        c.setDescricao(txDescricao.getText());
 
-        index = (c.getCodigo() > 0 ? tabela.getSelectedRow() : -1);
+        Setor s = new Setor();
+        if (validaCampoVazio(txCodigo.getText())) {
+            s.setCodigo(Integer.parseInt(txCodigo.getText()));
+        }
+        s.setNome(txNome.getText());
+        s.setDescricao(txDescricao.getText());
 
-        c = CargoController.salvar(c);
+        index = (s.getCodigo() > 0 ? tabela.getSelectedRow() : -1);
 
-        if (c == null) {
-            System.out.println("Erro ao registrar: CargoGUI.salvarRegistro()");
+        s = SetorController.salvar(s);
+
+        if (s == null) {
+            System.out.println("Erro ao registrar: SetorGUI.salvarRegistro()");
             return;
         }
 
         // Se for verdadeiro é alteração
         if (index > -1) {
-            cargos.set(index, c);
+            setores.set(index, s);
         } else {
-            cargos.add(c);
-            txCodigo.setText(String.valueOf(c.getCodigo()));
+            setores.add(s);
+            txCodigo.setText(String.valueOf(s.getCodigo()));
             index++;
         }
 
         modelo.setNumRows(0);
 
-        for (Cargo cc : cargos) {
+        for (Setor ss : setores) {
+            try {
+                s.setCoordenador(FuncionarioController.buscarPorId(s.getCoordenador().getCodigo()));
+            } catch (NullPointerException e) {
+            }
             modelo.addRow(new Object[]{
-                cc.getCodigo(), cc.getNome(), cc.getDescricao()
+                s.getCodigo(), s.getNome(), s.getCoordenador().getNome()
             });
         }
 
@@ -143,10 +181,10 @@ public class CargoGUI extends javax.swing.JFrame {
     private void excluirRegistro() {
         int linha = -1;
         linha = tabela.getSelectedRow();
-        Cargo cargoEx;
+        Setor setorEx;
 
         if (usuarioLogado.getNivel() > 1) {
-            JOptionPane.showMessageDialog(this, "Você não tem privilégio para manipular cargos");
+            JOptionPane.showMessageDialog(this, "Você não tem privilégio para manipular setores");
             return;
         }
 
@@ -161,20 +199,20 @@ public class CargoGUI extends javax.swing.JFrame {
         }
 
         int codigo = (int) tabela.getValueAt(linha, 0);
-        cargoEx = cargos.get(linha);
+        setorEx = setores.get(linha);
 
         if (!CargoController.excluir(codigo)) {
-            JOptionPane.showMessageDialog(this, "Erro ao excluir, possivelmente há funcionários relacionados a este cargo.");
+            JOptionPane.showMessageDialog(this, "Erro ao excluir, possivelmente há funcionários relacionados a este setor.");
             return;
         }
 
-        cargos.remove(linha);
+        setores.remove(linha);
         modelo.setNumRows(0);
         this.inclusaoRegistro();
 
-        for (Cargo c : cargos) {
+        for (Setor s : setores) {
             modelo.addRow(new Object[]{
-                c.getCodigo(), c.getNome(), c.getDescricao()
+                s.getCodigo(), s.getNome(), s.getDescricao()
             });
         }
     }
@@ -223,6 +261,10 @@ public class CargoGUI extends javax.swing.JFrame {
         btExcluir = new javax.swing.JButton();
         sp1 = new javax.swing.JSeparator();
         lbStatus = new javax.swing.JLabel();
+        lbCoordenador = new javax.swing.JLabel();
+        txCoordenadorCodigo = new javax.swing.JTextField();
+        txCoordenadorNome = new javax.swing.JTextField();
+        btCoordenador = new javax.swing.JButton();
 
         cbFiltro.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Código", "Nome", "Usuário", "Área" }));
         cbFiltro.setEnabled(false);
@@ -257,7 +299,7 @@ public class CargoGUI extends javax.swing.JFrame {
 
         lbTitulo.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         lbTitulo.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lbTitulo.setText("Cargo");
+        lbTitulo.setText("Setor / Área");
 
         lbCodigo.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         lbCodigo.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
@@ -292,7 +334,7 @@ public class CargoGUI extends javax.swing.JFrame {
         );
         painelConsultaLayout.setVerticalGroup(
             painelConsultaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(scrollConsulta, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 390, Short.MAX_VALUE)
+            .addComponent(scrollConsulta, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 388, Short.MAX_VALUE)
         );
 
         btSalvar.setText("Salvar");
@@ -325,6 +367,26 @@ public class CargoGUI extends javax.swing.JFrame {
         lbStatus.setForeground(java.awt.Color.red);
         lbStatus.setText(" ");
 
+        lbCoordenador.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        lbCoordenador.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lbCoordenador.setText("Coordenador:");
+
+        txCoordenadorCodigo.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        txCoordenadorCodigo.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        txCoordenadorCodigo.setText("1");
+
+        txCoordenadorNome.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        txCoordenadorNome.setText("Login de Acesso do Funcionário");
+        txCoordenadorNome.setEnabled(false);
+
+        btCoordenador.setText("Buscar");
+        btCoordenador.setToolTipText("Buscar área");
+        btCoordenador.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btCoordenadorActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout painelFundoLayout = new javax.swing.GroupLayout(painelFundo);
         painelFundo.setLayout(painelFundoLayout);
         painelFundoLayout.setHorizontalGroup(
@@ -352,10 +414,18 @@ public class CargoGUI extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(painelFundoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(painelFundoLayout.createSequentialGroup()
-                                .addGroup(painelFundoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(txCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(txNome, javax.swing.GroupLayout.PREFERRED_SIZE, 279, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(txCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(0, 0, Short.MAX_VALUE))
+                            .addGroup(painelFundoLayout.createSequentialGroup()
+                                .addComponent(txNome)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(lbCoordenador, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txCoordenadorCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txCoordenadorNome, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btCoordenador))
                             .addComponent(txDescricao))))
                 .addContainerGap())
         );
@@ -373,7 +443,12 @@ public class CargoGUI extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(painelFundoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lbNome)
-                    .addComponent(txNome, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txNome, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(painelFundoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(lbCoordenador)
+                        .addComponent(txCoordenadorCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(txCoordenadorNome, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btCoordenador)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(painelFundoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lbDescricao)
@@ -424,8 +499,13 @@ public class CargoGUI extends javax.swing.JFrame {
         inclusaoRegistro();
     }//GEN-LAST:event_btNovoActionPerformed
 
+    private void btCoordenadorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btCoordenadorActionPerformed
+        
+    }//GEN-LAST:event_btCoordenadorActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btAnterior;
+    private javax.swing.JButton btCoordenador;
     private javax.swing.JButton btExcluir;
     private javax.swing.JButton btNovo;
     private javax.swing.JButton btProximo;
@@ -433,6 +513,7 @@ public class CargoGUI extends javax.swing.JFrame {
     private javax.swing.JComboBox cbFiltro;
     private javax.swing.JLabel lbCodigo;
     private javax.swing.JLabel lbContaPagina;
+    private javax.swing.JLabel lbCoordenador;
     private javax.swing.JLabel lbDescricao;
     private javax.swing.JLabel lbNome;
     private javax.swing.JLabel lbStatus;
@@ -442,6 +523,8 @@ public class CargoGUI extends javax.swing.JFrame {
     private javax.swing.JScrollPane scrollConsulta;
     private javax.swing.JSeparator sp1;
     private javax.swing.JTextField txCodigo;
+    private javax.swing.JTextField txCoordenadorCodigo;
+    private javax.swing.JTextField txCoordenadorNome;
     private javax.swing.JTextField txDescricao;
     private javax.swing.JTextField txNome;
     private javax.swing.JTextField txPesquisa;

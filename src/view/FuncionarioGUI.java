@@ -202,12 +202,15 @@ public class FuncionarioGUI extends javax.swing.JFrame {
             }
         }
 
-        if (validaCampoVazio(txUsuarioCodigo.getText())) {
-            usuario = UsuarioController.buscarUsuario(txUsuarioCodigo.getText());
-            if (usuario == null) {
-                lbStatus.setText("Usuário não encontrado");
-                return;
-            }
+        if (!validaCampoVazio(txUsuarioCodigo.getText())) {
+            lbStatus.setText("Informe o usuário");
+            return;
+        }
+        
+        usuario = UsuarioController.buscarUsuario(txUsuarioCodigo.getText());
+        if (usuario == null) {
+            lbStatus.setText("Usuário não encontrado");
+            return;
         }
 
         Funcionario f = new Funcionario();

@@ -13,6 +13,7 @@ public class JanelaPrincipalGUI extends javax.swing.JFrame {
     private UsuarioGUI usuarioGUI;
     private CargoGUI cargoGUI;
     private FuncionarioGUI funcionarioGUI;
+    private SetorGUI setorGUI;
 
     public JanelaPrincipalGUI() {
         initComponents();
@@ -29,9 +30,10 @@ public class JanelaPrincipalGUI extends javax.swing.JFrame {
         lbTitulo = new javax.swing.JLabel();
         barraMenu = new javax.swing.JMenuBar();
         menuCadastros = new javax.swing.JMenu();
-        itemCargo = new javax.swing.JMenuItem();
-        itemFuncionario = new javax.swing.JMenuItem();
         itemUsuario = new javax.swing.JMenuItem();
+        itemFuncionario = new javax.swing.JMenuItem();
+        itemCargo = new javax.swing.JMenuItem();
+        itemSetor = new javax.swing.JMenuItem();
         menuConsultas = new javax.swing.JMenu();
         itemConsFolga = new javax.swing.JMenuItem();
         menuFuncoes = new javax.swing.JMenu();
@@ -68,13 +70,13 @@ public class JanelaPrincipalGUI extends javax.swing.JFrame {
 
         menuCadastros.setText("Cadastros");
 
-        itemCargo.setText("Cargo");
-        itemCargo.addActionListener(new java.awt.event.ActionListener() {
+        itemUsuario.setText("Usuário");
+        itemUsuario.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                itemCargoActionPerformed(evt);
+                itemUsuarioActionPerformed(evt);
             }
         });
-        menuCadastros.add(itemCargo);
+        menuCadastros.add(itemUsuario);
 
         itemFuncionario.setText("Funcionário");
         itemFuncionario.addActionListener(new java.awt.event.ActionListener() {
@@ -84,13 +86,21 @@ public class JanelaPrincipalGUI extends javax.swing.JFrame {
         });
         menuCadastros.add(itemFuncionario);
 
-        itemUsuario.setText("Usuário");
-        itemUsuario.addActionListener(new java.awt.event.ActionListener() {
+        itemCargo.setText("Cargo");
+        itemCargo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                itemUsuarioActionPerformed(evt);
+                itemCargoActionPerformed(evt);
             }
         });
-        menuCadastros.add(itemUsuario);
+        menuCadastros.add(itemCargo);
+
+        itemSetor.setText("Setor");
+        itemSetor.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                itemSetorActionPerformed(evt);
+            }
+        });
+        menuCadastros.add(itemSetor);
 
         barraMenu.add(menuCadastros);
 
@@ -158,12 +168,22 @@ public class JanelaPrincipalGUI extends javax.swing.JFrame {
 //            this.dispose();
 //        }
     }//GEN-LAST:event_formWindowClosing
+
+    private void itemSetorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemSetorActionPerformed
+        if (setorGUI != null) {
+            setorGUI.dispose();
+        }
+        setorGUI = new SetorGUI();
+        setorGUI.setVisible(true);
+    }//GEN-LAST:event_itemSetorActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuBar barraMenu;
     private javax.swing.JMenuItem itemCargo;
     private javax.swing.JMenuItem itemConsFolga;
     private javax.swing.JMenuItem itemDesbloqFolga;
     private javax.swing.JMenuItem itemFuncionario;
+    private javax.swing.JMenuItem itemSetor;
     private javax.swing.JMenuItem itemSolicFolga;
     private javax.swing.JMenuItem itemUsuario;
     private javax.swing.JLabel lbTitulo;
