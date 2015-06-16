@@ -1,5 +1,6 @@
 package view;
 
+import controller.Sessao;
 import controller.UsuarioController;
 import java.awt.Color;
 import java.util.List;
@@ -17,33 +18,21 @@ import static util.Validadores.*;
  */
 public class UsuarioGUI extends javax.swing.JFrame {
 
-    private Usuario usuarioLogado;
+    private final Usuario usuarioLogado = Sessao.getInstance().getUsuario();
     private char modo; // I - Inclusao, M - Manutenção/Alteração
     private int qtdRegistros = 0;
     private int pagina;
     private List<Usuario> usuarios;
     private NovaSenhaGUI novaSenhaGUI = new NovaSenhaGUI();
+    private AlterarSenhaGUI alterarSenhaGUI = new AlterarSenhaGUI();
 
     private DefaultTableModel modelo;
     private JTable tabela;
 
-    public UsuarioGUI(Usuario usuarioLogado) {
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Windows".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(UsuarioGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
+    public UsuarioGUI() {
         initComponents();
         setLocationRelativeTo(null);
 
-        this.usuarioLogado = usuarioLogado;
         this.criarTabela();
 
 //        this.manutencaoRegistro(null);
@@ -90,8 +79,10 @@ public class UsuarioGUI extends javax.swing.JFrame {
     private void inclusaoRegistro() {
         modo = 'I';
         txCodigo.setText(null);
+        txUsuario.setEditable(true);
         txNome.setText(null);
         txUsuario.setText(null);
+        novaSenhaGUI = new NovaSenhaGUI();
         txNome.grabFocus();
         lbTitulo.setText("Usuário - Inclusão");
         lbStatus.setText("");
@@ -114,14 +105,17 @@ public class UsuarioGUI extends javax.swing.JFrame {
     }
 
     private void manutencaoRegistro(java.awt.event.MouseEvent evt) {
-        Usuario usu = usuarios.get(tabela.getSelectedRow());
+        Usuario usuSelecionado = usuarios.get(tabela.getSelectedRow());
 
         modo = 'M';
+        alterarSenhaGUI = new AlterarSenhaGUI();
+        txUsuario.setEditable(false);
         lbTitulo.setText("Usuário - Manutenção");
-        txCodigo.setText(String.valueOf(usu.getCodigo()));
-        txNome.setText(usu.getNome());
-        txUsuario.setText(usu.getUsuario());
-        cbNivel.setSelectedIndex(usu.getNivel());
+        txCodigo.setText(String.valueOf(usuSelecionado.getCodigo()));
+        txNome.setText(usuSelecionado.getNome());
+        txUsuario.setText(usuSelecionado.getUsuario());
+        cbNivel.setSelectedIndex(usuSelecionado.getNivel());
+        alterarSenhaGUI.setSenhaAntiga(usuSelecionado.getSenha());
     }
 
     private void salvarRegistro() {
@@ -139,13 +133,6 @@ public class UsuarioGUI extends javax.swing.JFrame {
             return;
         }
 
-        if (!novaSenhaGUI.isSenhaValida()) {
-            lbStatus.setText("Verifique sua senha.");
-            novaSenhaGUI.setLocationRelativeTo(this);
-            novaSenhaGUI.setVisible(true);
-            return;
-        }
-
         Usuario u = new Usuario();
         if (validaCampoVazio(txCodigo.getText())) {
             u.setCodigo(Integer.parseInt(txCodigo.getText()));
@@ -153,7 +140,29 @@ public class UsuarioGUI extends javax.swing.JFrame {
         u.setNome(txNome.getText());
         u.setNivel(cbNivel.getSelectedIndex());
         u.setUsuario(txUsuario.getText());
-        u.setSenha(novaSenhaGUI.getSenha());
+
+        if (modo == 'M') {
+            if (!alterarSenhaGUI.isSenhaValida()) {
+                lbStatus.setText("Verifique sua senha.");
+                alterarSenhaGUI.setLocationRelativeTo(this);
+                alterarSenhaGUI.setVisible(true);
+                return;
+            }
+            u.setSenha(alterarSenhaGUI.getSenha());
+        } else {
+            if (!novaSenhaGUI.isSenhaValida()) {
+                lbStatus.setText("Verifique sua senha.");
+                novaSenhaGUI.setLocationRelativeTo(this);
+                novaSenhaGUI.setVisible(true);
+                return;
+            }
+            u.setSenha(novaSenhaGUI.getSenha());
+        }
+
+        if (usuarioLogado.getNivel() > u.getNivel()) {
+            lbStatus.setText("Você não tem privilégio para alterar esse usuário.");
+            return;
+        }
 
         index = (u.getCodigo() > 0 ? tabela.getSelectedRow() : -1);
 
@@ -190,13 +199,13 @@ public class UsuarioGUI extends javax.swing.JFrame {
         linha = tabela.getSelectedRow();
         Usuario usuEx;
 
-        if (JOptionPane.showConfirmDialog(this, "Confirma exclusão do registro?")
-                != JOptionPane.YES_OPTION) {
+        if (!(linha > -1)) { // se NÃO for maior que -1
+            JOptionPane.showMessageDialog(this, "Nenhum registro foi selecionado");
             return;
         }
 
-        if (!(linha > -1)) { // se NÃO for maior que -1
-            JOptionPane.showMessageDialog(this, "Nenhum registro foi selecionado");
+        if (JOptionPane.showConfirmDialog(this, "Confirma exclusão do registro?")
+                != JOptionPane.YES_OPTION) {
             return;
         }
 
@@ -254,6 +263,11 @@ public class UsuarioGUI extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        cbFiltro = new javax.swing.JComboBox();
+        txPesquisa = new javax.swing.JTextField();
+        btProximo = new javax.swing.JButton();
+        lbContaPagina = new javax.swing.JLabel();
+        btAnterior = new javax.swing.JButton();
         painelFundo = new javax.swing.JPanel();
         lbTitulo = new javax.swing.JLabel();
         lbCodigo = new javax.swing.JLabel();
@@ -265,11 +279,6 @@ public class UsuarioGUI extends javax.swing.JFrame {
         txUsuario = new javax.swing.JTextField();
         painelConsulta = new javax.swing.JPanel();
         scrollConsulta = new javax.swing.JScrollPane();
-        btAnterior = new javax.swing.JButton();
-        btProximo = new javax.swing.JButton();
-        lbContaPagina = new javax.swing.JLabel();
-        cbFiltro = new javax.swing.JComboBox();
-        txPesquisa = new javax.swing.JTextField();
         btSalvar = new javax.swing.JButton();
         btNovo = new javax.swing.JButton();
         btExcluir = new javax.swing.JButton();
@@ -277,6 +286,33 @@ public class UsuarioGUI extends javax.swing.JFrame {
         btSenha = new javax.swing.JButton();
         lbStatus = new javax.swing.JLabel();
         cbNivel = new javax.swing.JComboBox();
+
+        cbFiltro.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Código", "Nome", "Usuário", "Área" }));
+        cbFiltro.setEnabled(false);
+
+        txPesquisa.setEnabled(false);
+
+        btProximo.setText("<");
+        btProximo.setToolTipText("Página anterior");
+        btProximo.setEnabled(false);
+        btProximo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btProximoActionPerformed(evt);
+            }
+        });
+
+        lbContaPagina.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        lbContaPagina.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lbContaPagina.setText("1");
+
+        btAnterior.setText(">");
+        btAnterior.setToolTipText("Próxima página");
+        btAnterior.setEnabled(false);
+        btAnterior.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btAnteriorActionPerformed(evt);
+            }
+        });
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Usuário");
@@ -315,60 +351,15 @@ public class UsuarioGUI extends javax.swing.JFrame {
 
         painelConsulta.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
-        btAnterior.setText(">");
-        btAnterior.setToolTipText("Próxima página");
-        btAnterior.setEnabled(false);
-        btAnterior.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btAnteriorActionPerformed(evt);
-            }
-        });
-
-        btProximo.setText("<");
-        btProximo.setToolTipText("Página anterior");
-        btProximo.setEnabled(false);
-        btProximo.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btProximoActionPerformed(evt);
-            }
-        });
-
-        lbContaPagina.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        lbContaPagina.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lbContaPagina.setText("1");
-
-        cbFiltro.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Código", "Nome", "Usuário", "Área" }));
-        cbFiltro.setEnabled(false);
-
-        txPesquisa.setEnabled(false);
-
         javax.swing.GroupLayout painelConsultaLayout = new javax.swing.GroupLayout(painelConsulta);
         painelConsulta.setLayout(painelConsultaLayout);
         painelConsultaLayout.setHorizontalGroup(
             painelConsultaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(painelConsultaLayout.createSequentialGroup()
-                .addComponent(cbFiltro, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txPesquisa, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btProximo)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(lbContaPagina)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btAnterior))
             .addComponent(scrollConsulta)
         );
         painelConsultaLayout.setVerticalGroup(
             painelConsultaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, painelConsultaLayout.createSequentialGroup()
-                .addGroup(painelConsultaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btAnterior)
-                    .addComponent(btProximo)
-                    .addComponent(lbContaPagina)
-                    .addComponent(cbFiltro, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txPesquisa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(scrollConsulta, javax.swing.GroupLayout.DEFAULT_SIZE, 359, Short.MAX_VALUE))
+            .addComponent(scrollConsulta, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 388, Short.MAX_VALUE)
         );
 
         btSalvar.setText("Salvar");
@@ -397,7 +388,7 @@ public class UsuarioGUI extends javax.swing.JFrame {
 
         sp1.setOrientation(javax.swing.SwingConstants.VERTICAL);
 
-        btSenha.setText("Alterar Senha");
+        btSenha.setText("Senha");
         btSenha.setToolTipText("Salvar usuário");
         btSenha.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -522,8 +513,13 @@ public class UsuarioGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_btNovoActionPerformed
 
     private void btSenhaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btSenhaActionPerformed
-        novaSenhaGUI.setLocationRelativeTo(this);
-        novaSenhaGUI.setVisible(true);
+        if (modo == 'M') {
+            alterarSenhaGUI.setLocationRelativeTo(this);
+            alterarSenhaGUI.setVisible(true);
+        } else {
+            novaSenhaGUI.setLocationRelativeTo(this);
+            novaSenhaGUI.setVisible(true);
+        }
     }//GEN-LAST:event_btSenhaActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

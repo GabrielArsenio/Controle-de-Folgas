@@ -1,6 +1,6 @@
 package view;
 
-import javax.swing.JOptionPane;
+import controller.Sessao;
 import model.Usuario;
 
 /**
@@ -9,27 +9,14 @@ import model.Usuario;
  */
 public class JanelaPrincipalGUI extends javax.swing.JFrame {
 
-    private final Usuario usuarioLogado;
+    private final Usuario usuarioLogado = Sessao.getInstance().getUsuario();
     private FuncionarioGUI janelaFuncionario;
     private AreaGUI janelaArea;
     private UsuarioGUI janelaUsuario;
 
-    public JanelaPrincipalGUI(Usuario usuario) {
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Windows".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(JanelaPrincipalGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
+    public JanelaPrincipalGUI() {
         initComponents();
 
-        this.usuarioLogado = usuario;
         this.setTitle(usuarioLogado.getNome() + " - " + this.getTitle());
         this.setExtendedState(JanelaPrincipalGUI.MAXIMIZED_BOTH);
     }
@@ -160,7 +147,7 @@ public class JanelaPrincipalGUI extends javax.swing.JFrame {
         if (janelaUsuario != null) {
             janelaUsuario.dispose();
         }
-        janelaUsuario = new UsuarioGUI(usuarioLogado);
+        janelaUsuario = new UsuarioGUI();
         janelaUsuario.setVisible(true);
     }//GEN-LAST:event_itemUsuarioActionPerformed
 

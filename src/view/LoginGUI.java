@@ -1,5 +1,6 @@
 package view;
 
+import controller.Sessao;
 import controller.UsuarioController;
 import model.Usuario;
 
@@ -50,6 +51,7 @@ public class LoginGUI extends javax.swing.JFrame {
         lbUsuario.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         lbUsuario.setText("Usuário");
 
+        txUsuario.setColumns(1);
         txUsuario.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         txUsuario.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -142,7 +144,9 @@ public class LoginGUI extends javax.swing.JFrame {
         usuario = UsuarioController.validarLogin(txUsuario.getText(), txSenha.getText());
 
         if (usuario != null) {
-            new JanelaPrincipalGUI(usuario).setVisible(true);
+            Sessao sessao = Sessao.getInstance();
+            sessao.setUsuario(usuario);
+            new JanelaPrincipalGUI().setVisible(true);
             this.dispose();
         } else {
             txUsuario.setEnabled(true);

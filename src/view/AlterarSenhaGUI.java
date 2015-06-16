@@ -7,26 +7,31 @@ import static util.Validadores.validaCampoVazio;
  *
  * @author Gabriel
  */
-public class NovaSenhaGUI extends javax.swing.JFrame {
+public class AlterarSenhaGUI extends javax.swing.JFrame {
 
-    public NovaSenhaGUI() {
+    private String senhaAntiga;
+
+    public AlterarSenhaGUI() {
         initComponents();
     }
 
-    private boolean validarSenha(String senha, String confirmaSenha) {
-        if (!validaCampoVazio(senha) && !validaCampoVazio(confirmaSenha)) {
-            lbSenha.setForeground(Color.red);
-            lbConfirmaSenha.setForeground(Color.red);
-            txSenha.grabFocus();
+    private boolean validarSenha(String senhaAntiga, String senha, String confirmaSenha) {
+        if (!validaCampoVazio(senhaAntiga)) {
+            lbSenhaAntiga.setForeground(Color.red);
+            txSenhaAntiga.grabFocus();
             return false;
         }
-        if (!senha.equals(confirmaSenha)) {
+
+        if ((validaCampoVazio(senha)
+                || validaCampoVazio(confirmaSenha))
+                && !senha.equals(confirmaSenha)) {
             lbSenha.setForeground(Color.black);
             lbConfirmaSenha.setForeground(Color.red);
             txConfirmaSenha.grabFocus();
             return false;
         }
 
+        lbSenhaAntiga.setForeground(Color.black);
         lbSenha.setForeground(Color.black);
         lbConfirmaSenha.setForeground(Color.black);
         this.setVisible(false);
@@ -34,11 +39,19 @@ public class NovaSenhaGUI extends javax.swing.JFrame {
     }
 
     public boolean isSenhaValida() {
-        return validarSenha(txSenha.getText(), txConfirmaSenha.getText());
+        return validarSenha(txSenhaAntiga.getText(), txSenha.getText(), txConfirmaSenha.getText());
     }
 
     public String getSenha() {
-        return txSenha.getText();
+        if (validaCampoVazio(txSenha.getText())) {
+            return txSenha.getText();
+        } else {
+            return txSenhaAntiga.getText();
+        }
+    }
+
+    public void setSenhaAntiga(String senhaAntiga) {
+        this.senhaAntiga = senhaAntiga;
     }
 
     @SuppressWarnings("unchecked")
@@ -52,13 +65,15 @@ public class NovaSenhaGUI extends javax.swing.JFrame {
         txConfirmaSenha = new javax.swing.JPasswordField();
         btCancela = new javax.swing.JButton();
         btSalvar = new javax.swing.JButton();
+        lbSenhaAntiga = new javax.swing.JLabel();
+        txSenhaAntiga = new javax.swing.JPasswordField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Nova Senha");
         setResizable(false);
 
         lbSenha.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        lbSenha.setText("Senha");
+        lbSenha.setText("Nova Senha");
 
         txSenha.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         txSenha.addActionListener(new java.awt.event.ActionListener() {
@@ -91,6 +106,16 @@ public class NovaSenhaGUI extends javax.swing.JFrame {
             }
         });
 
+        lbSenhaAntiga.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        lbSenhaAntiga.setText("Senha Antiga");
+
+        txSenhaAntiga.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        txSenhaAntiga.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txSenhaAntigaActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout painelSenhaLayout = new javax.swing.GroupLayout(painelSenha);
         painelSenha.setLayout(painelSenhaLayout);
         painelSenhaLayout.setHorizontalGroup(
@@ -106,13 +131,19 @@ public class NovaSenhaGUI extends javax.swing.JFrame {
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(btSalvar)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btCancela)))
+                        .addComponent(btCancela))
+                    .addComponent(lbSenhaAntiga, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(txSenhaAntiga))
                 .addContainerGap())
         );
         painelSenhaLayout.setVerticalGroup(
             painelSenhaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(painelSenhaLayout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, painelSenhaLayout.createSequentialGroup()
                 .addContainerGap()
+                .addComponent(lbSenhaAntiga)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txSenhaAntiga, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lbSenha)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(txSenha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -150,12 +181,16 @@ public class NovaSenhaGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_txConfirmaSenhaActionPerformed
 
     private void btSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btSalvarActionPerformed
-        validarSenha(txSenha.getText(), txConfirmaSenha.getText());
+        validarSenha(txSenhaAntiga.getText(), txSenha.getText(), txConfirmaSenha.getText());
     }//GEN-LAST:event_btSalvarActionPerformed
 
     private void btCancelaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btCancelaActionPerformed
         this.setVisible(false);
     }//GEN-LAST:event_btCancelaActionPerformed
+
+    private void txSenhaAntigaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txSenhaAntigaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txSenhaAntigaActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -163,8 +198,10 @@ public class NovaSenhaGUI extends javax.swing.JFrame {
     private javax.swing.JButton btSalvar;
     private javax.swing.JLabel lbConfirmaSenha;
     private javax.swing.JLabel lbSenha;
+    private javax.swing.JLabel lbSenhaAntiga;
     private javax.swing.JPanel painelSenha;
     private javax.swing.JPasswordField txConfirmaSenha;
     private javax.swing.JPasswordField txSenha;
+    private javax.swing.JPasswordField txSenhaAntiga;
     // End of variables declaration//GEN-END:variables
 }
