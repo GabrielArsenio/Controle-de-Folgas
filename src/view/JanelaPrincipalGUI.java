@@ -1,7 +1,6 @@
 package view;
 
 import controller.Sessao;
-import javax.swing.JFrame;
 import model.Usuario;
 
 /**

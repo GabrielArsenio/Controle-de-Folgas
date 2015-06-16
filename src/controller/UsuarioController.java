@@ -9,7 +9,7 @@ import model.Usuario;
  *
  * @author gabriel_arsenio
  */
-public abstract class UsuarioController {
+public class UsuarioController {
 
     public static Usuario salvar(Usuario usuario) {
         UsuarioDAO dao = new UsuarioDAOJPA();
@@ -39,6 +39,11 @@ public abstract class UsuarioController {
     public static Usuario buscarUsuario(String usuario, String senha) {
         UsuarioDAO dao = new UsuarioDAOJPA();
         return dao.getUsuario(usuario, senha);
+    }
+    
+    public static Usuario buscarUsuario(String usuario) {
+        UsuarioDAO dao = new UsuarioDAOJPA();
+        return dao.getUsuario(usuario);
     }
 
     public static Usuario buscarUltimo() {

@@ -11,32 +11,32 @@ import model.Setor;
  */
 public class SetorController {
 
-    public Setor salvar(Setor area) {
+    public static Setor salvar(Setor area) {
         SetorDAO dao = new SetorDAOJPA();
         return dao.save(area);
     }
 
-    public boolean excluir(int codigo) {
+    public static boolean excluir(int codigo) {
         SetorDAO dao = new SetorDAOJPA();
         return dao.remove(Setor.class, codigo);
     }
 
-    public List<Setor> listarTodos() {
+    public static List<Setor> listarTodos() {
         SetorDAO dao = new SetorDAOJPA();
         return dao.getAll(Setor.class);
     }
 
-    public List<Setor> listarTodos(int min, int max) {
+    public static List<Setor> listarTodos(int min, int max) {
         SetorDAO dao = new SetorDAOJPA();
         return dao.getAll(Setor.class);
     }
 
-    public Setor buscarPorId(int codigo) {
+    public static Setor buscarPorId(int codigo) {
         SetorDAO dao = new SetorDAOJPA();
         return dao.getById(Setor.class, codigo);
     }
 
-    public List<Setor> pesquisarNome(String nome) {
+    public static List<Setor> pesquisarNome(String nome) {
         SetorDAO dao = new SetorDAOJPA();
         return dao.pesquisarNome(nome);
     }

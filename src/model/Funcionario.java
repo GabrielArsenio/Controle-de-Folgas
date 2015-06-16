@@ -42,6 +42,18 @@ public class Funcionario implements Serializable {
     public Funcionario() {
     }
 
+    public Funcionario(String nome, Date dataNascimento, Date dataEfetivo, char sexo, Setor setor, Cargo cargo, Usuario usuario, String telefone, String email) {
+        this.nome = nome;
+        this.dataNascimento = dataNascimento;
+        this.dataEfetivo = dataEfetivo;
+        this.sexo = sexo;
+        this.setor = setor;
+        this.cargo = cargo;
+        this.usuario = usuario;
+        this.telefone = telefone;
+        this.email = email;
+    }
+
     @Override
     public String toString() {
         return nome;
@@ -112,6 +124,10 @@ public class Funcionario implements Serializable {
             default:
                 return "";
         }
+    }
+    
+    public char getCharSexo() {
+        return sexo;
     }
 
     public void setSexo(char sexo) {

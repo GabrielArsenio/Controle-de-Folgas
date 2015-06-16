@@ -163,7 +163,7 @@ public class CargoGUI extends javax.swing.JFrame {
         int codigo = (int) tabela.getValueAt(linha, 0);
         cargoEx = cargos.get(linha);
 
-        if (!UsuarioController.excluir(codigo)) {
+        if (!CargoController.excluir(codigo)) {
             JOptionPane.showMessageDialog(this, "Erro ao excluir, possivelmente há funcionários relacionados a este cargo.");
             return;
         }

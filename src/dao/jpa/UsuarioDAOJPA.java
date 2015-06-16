@@ -39,4 +39,19 @@ public class UsuarioDAOJPA extends DAOJPA<Usuario, Integer> implements UsuarioDA
 
         return user;
     }
+
+    @Override
+    public Usuario getUsuario(String usuario) {
+        Usuario user = null;
+        try {
+            user = (Usuario) getEntityManager()
+                    .createQuery("SELECT u FROM Usuario u WHERE "
+                            + "u.usuario = '" + usuario + "'")
+                    .getSingleResult();
+        } catch (NoResultException ex) {
+            System.out.println("Usuário não encontrado\n" + ex.getMessage());
+        }
+
+        return user;
+    }
 }

@@ -11,32 +11,32 @@ import model.Funcionario;
  */
 public class FuncionarioController {
 
-    public Funcionario salvar(Funcionario funcionario) {
+    public static Funcionario salvar(Funcionario funcionario) {
         FuncionarioDAO dao = new FuncionarioDAOJPA();
         return dao.save(funcionario);
     }
 
-    public boolean excluir(int codigo) {
+    public static boolean excluir(int codigo) {
         FuncionarioDAO dao = new FuncionarioDAOJPA();
         return dao.remove(Funcionario.class, codigo);
     }
 
-    public List<Funcionario> listarTodos() {
+    public static List<Funcionario> listarTodos() {
         FuncionarioDAO dao = new FuncionarioDAOJPA();
         return dao.getAll(Funcionario.class);
     }
 
-    public List<Funcionario> listarTodos(int min, int max) {
+    public static List<Funcionario> listarTodos(int min, int max) {
         FuncionarioDAO dao = new FuncionarioDAOJPA();
         return dao.getAll(Funcionario.class);
     }
 
-    public Funcionario buscarPorId(int codigo) {
+    public static Funcionario buscarPorId(int codigo) {
         FuncionarioDAO dao = new FuncionarioDAOJPA();
         return dao.getById(Funcionario.class, codigo);
     }
 
-    public List<Funcionario> pesquisarNome(String nome) {
+    public static List<Funcionario> pesquisarNome(String nome) {
         FuncionarioDAO dao = new FuncionarioDAOJPA();
         return dao.pesquisarNome(nome);
     }

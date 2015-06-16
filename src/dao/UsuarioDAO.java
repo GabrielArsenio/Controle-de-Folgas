@@ -14,4 +14,6 @@ public interface UsuarioDAO extends DAO<Usuario, Integer> {
     int getUsuariosCount();
     
     Usuario getUsuario(String usuario, String senha);
+    
+    Usuario getUsuario(String usuario);
 }

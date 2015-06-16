@@ -16,12 +16,12 @@ public class CargoController {
         return dao.save(area);
     }
 
-    public boolean excluir(int codigo) {
+    public static boolean excluir(int codigo) {
         CargoDAO dao = new CargoDAOJPA();
         return dao.remove(Cargo.class, codigo);
     }
 
-    public List<Cargo> listarTodos() {
+    public static List<Cargo> listarTodos() {
         CargoDAO dao = new CargoDAOJPA();
         return dao.getAll(Cargo.class);
     }
@@ -31,12 +31,12 @@ public class CargoController {
         return dao.getAll(Cargo.class);
     }
 
-    public Cargo buscarPorId(int codigo) {
+    public static Cargo buscarPorId(int codigo) {
         CargoDAO dao = new CargoDAOJPA();
         return dao.getById(Cargo.class, codigo);
     }
 
-    public List<Cargo> pesquisarNome(String nome) {
+    public static List<Cargo> pesquisarNome(String nome) {
         CargoDAO dao = new CargoDAOJPA();
         return dao.pesquisarNome(nome);
     }

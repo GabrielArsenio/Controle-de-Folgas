@@ -275,6 +275,23 @@ public abstract class Validadores {
             return false;
         }
     }
+    
+    /**
+     * Método responsável por validar dados do tipo inteiro.
+     *
+     * @author Gabriel Arsênio da Silva
+     * @since v1.00 16/06/2015
+     * @param text
+     * @return
+     */
+    public static boolean validaInt(String text) {
+        try {
+            Integer numero = Integer.parseInt(text);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
 
     /**
      * Método responsável por validar datas.

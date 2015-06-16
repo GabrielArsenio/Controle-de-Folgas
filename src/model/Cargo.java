@@ -22,7 +22,8 @@ public class Cargo implements Serializable {
     public Cargo() {
     }
 
-    public Cargo(String nome, String descricao) {
+    public Cargo(int codigo, String nome, String descricao) {
+        this.codigo = codigo;
         this.nome = nome;
         this.descricao = descricao;
     }
