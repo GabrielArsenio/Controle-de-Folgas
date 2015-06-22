@@ -14,6 +14,7 @@ public class JanelaPrincipalGUI extends javax.swing.JFrame {
     private CargoGUI cargoGUI;
     private FuncionarioGUI funcionarioGUI;
     private SetorGUI setorGUI;
+    private LancamentoSaidaGUI lancamentoSaidaGUI;
 
     public JanelaPrincipalGUI() {
         initComponents();
@@ -117,6 +118,11 @@ public class JanelaPrincipalGUI extends javax.swing.JFrame {
         menuFuncoes.add(itemDesbloqFolga);
 
         itemSolicFolga.setText("Solicitar Folga");
+        itemSolicFolga.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                itemSolicFolgaActionPerformed(evt);
+            }
+        });
         menuFuncoes.add(itemSolicFolga);
 
         barraMenu.add(menuFuncoes);
@@ -176,6 +182,14 @@ public class JanelaPrincipalGUI extends javax.swing.JFrame {
         setorGUI = new SetorGUI();
         setorGUI.setVisible(true);
     }//GEN-LAST:event_itemSetorActionPerformed
+
+    private void itemSolicFolgaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemSolicFolgaActionPerformed
+        if (lancamentoSaidaGUI != null) {
+            lancamentoSaidaGUI.dispose();
+        }
+        lancamentoSaidaGUI = new LancamentoSaidaGUI();
+        lancamentoSaidaGUI.setVisible(true);
+    }//GEN-LAST:event_itemSolicFolgaActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuBar barraMenu;

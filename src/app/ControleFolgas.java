@@ -1,5 +1,6 @@
 package app;
 
+import javax.persistence.Persistence;
 import view.LoginGUI;
 
 /**
@@ -9,6 +10,7 @@ import view.LoginGUI;
 public class ControleFolgas {
 
     public static void main(String[] args) {
+        Persistence.createEntityManagerFactory("ControleFolgasPU");
         new LoginGUI().setVisible(true);
     }
 }

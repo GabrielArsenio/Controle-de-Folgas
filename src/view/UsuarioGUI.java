@@ -286,6 +286,7 @@ public class UsuarioGUI extends javax.swing.JFrame {
         btSenha = new javax.swing.JButton();
         lbStatus = new javax.swing.JLabel();
         cbNivel = new javax.swing.JComboBox();
+        btSelecionar = new javax.swing.JButton();
 
         cbFiltro.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Código", "Nome", "Usuário", "Área" }));
         cbFiltro.setEnabled(false);
@@ -402,6 +403,14 @@ public class UsuarioGUI extends javax.swing.JFrame {
 
         cbNivel.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
+        btSelecionar.setText("Selecionar");
+        btSelecionar.setToolTipText("Salvar usuário");
+        btSelecionar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btSelecionarActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout painelFundoLayout = new javax.swing.GroupLayout(painelFundo);
         painelFundo.setLayout(painelFundoLayout);
         painelFundoLayout.setHorizontalGroup(
@@ -412,7 +421,8 @@ public class UsuarioGUI extends javax.swing.JFrame {
                     .addComponent(painelConsulta, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(lbTitulo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, painelFundoLayout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(btSelecionar)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(btSalvar, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(btNovo, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -471,7 +481,8 @@ public class UsuarioGUI extends javax.swing.JFrame {
                     .addGroup(painelFundoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(btSalvar)
                         .addComponent(btNovo)
-                        .addComponent(btExcluir))
+                        .addComponent(btExcluir)
+                        .addComponent(btSelecionar))
                     .addComponent(sp1, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(painelConsulta, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -522,12 +533,17 @@ public class UsuarioGUI extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btSenhaActionPerformed
 
+    private void btSelecionarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btSelecionarActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btSelecionarActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btAnterior;
     private javax.swing.JButton btExcluir;
     private javax.swing.JButton btNovo;
     private javax.swing.JButton btProximo;
     private javax.swing.JButton btSalvar;
+    private javax.swing.JButton btSelecionar;
     private javax.swing.JButton btSenha;
     private javax.swing.JComboBox cbFiltro;
     private javax.swing.JComboBox cbNivel;
