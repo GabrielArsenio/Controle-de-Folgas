@@ -1,7 +1,9 @@
 package model;
 
 import java.io.Serializable;
+import java.sql.Time;
 import java.util.Date;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -22,22 +24,18 @@ public class Folga implements Serializable {
     private int codigo;
     @ManyToOne
     private Funcionario funcionario;
-//    @ManyToOne
-//    private Area area;
+    @Column(nullable = true)
     private char tipo;
     @Temporal(TemporalType.DATE)
     private Date dtInicio;
     @Temporal(TemporalType.DATE)
     private Date dtFim;
-    @Temporal(TemporalType.TIME)
-    private Date hrManhaInicio;
-    @Temporal(TemporalType.TIME)
-    private Date hrManhaFim;
-    @Temporal(TemporalType.TIME)
-    private Date hrTardeInicio;
-    @Temporal(TemporalType.TIME)
-    private Date hrTardeFim;
+    private Time hrManhaInicio;
+    private Time hrManhaFim;
+    private Time hrTardeInicio;
+    private Time hrTardeFim;
     private String motivo;
+    @Column(nullable = true)
     private char status;
     private String observacao;
 
@@ -64,14 +62,6 @@ public class Folga implements Serializable {
     public void setFuncionario(Funcionario funcionario) {
         this.funcionario = funcionario;
     }
-
-//    public Area getArea() {
-//        return area;
-//    }
-//
-//    public void setArea(Area area) {
-//        this.area = area;
-//    }
 
     public String getTipo() {
         switch (tipo) {
@@ -106,44 +96,40 @@ public class Folga implements Serializable {
         this.dtFim = dtFim;
     }
 
-    public Date getHrManhaInicio() {
+    public void setMotivo(String motivo) {
+        this.motivo = motivo;
+    }
+
+    public Time getHrManhaInicio() {
         return hrManhaInicio;
     }
 
-    public void setHrManhaInicio(Date hrManhaInicio) {
+    public void setHrManhaInicio(Time hrManhaInicio) {
         this.hrManhaInicio = hrManhaInicio;
     }
 
-    public Date getHrManhaFim() {
+    public Time getHrManhaFim() {
         return hrManhaFim;
     }
 
-    public void setHrManhaFim(Date hrManhaFim) {
+    public void setHrManhaFim(Time hrManhaFim) {
         this.hrManhaFim = hrManhaFim;
     }
 
-    public Date getHrTardeInicio() {
+    public Time getHrTardeInicio() {
         return hrTardeInicio;
     }
 
-    public void setHrTardeInicio(Date hrTardeInicio) {
+    public void setHrTardeInicio(Time hrTardeInicio) {
         this.hrTardeInicio = hrTardeInicio;
     }
 
-    public Date getHrTardeFim() {
+    public Time getHrTardeFim() {
         return hrTardeFim;
     }
 
-    public void setHrTardeFim(Date hrTardeFim) {
+    public void setHrTardeFim(Time hrTardeFim) {
         this.hrTardeFim = hrTardeFim;
-    }
-
-    public String getMotivo() {
-        return motivo;
-    }
-
-    public void setMotivo(String motivo) {
-        this.motivo = motivo;
     }
 
     public String getStatus() {

@@ -1,9 +1,13 @@
 package view;
 
 import controller.FuncionarioController;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import model.Folga;
 import model.Funcionario;
 import static util.Validadores.*;
 
@@ -89,6 +93,11 @@ public class LancamentoSaidaGUI extends javax.swing.JFrame {
         txFuncionarioCodigo.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         txFuncionarioCodigo.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         txFuncionarioCodigo.setText("1");
+        txFuncionarioCodigo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txFuncionarioCodigoActionPerformed(evt);
+            }
+        });
 
         txFuncionarioNome.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         txFuncionarioNome.setText("Nome do Funcionário");
@@ -96,6 +105,7 @@ public class LancamentoSaidaGUI extends javax.swing.JFrame {
 
         btFuncionario.setText("Buscar");
         btFuncionario.setToolTipText("Buscar área");
+        btFuncionario.setFocusable(false);
 
         cbTipo.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Folga", "Férias", "Saída" }));
 
@@ -330,41 +340,148 @@ public class LancamentoSaidaGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_btCancelarActionPerformed
 
     private void btSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btSalvarActionPerformed
-        String codigoFunc = txFuncionarioCodigo.getText();
-        String dtManhaIni = txDtInicio.getText();
-        Date dManhaIni;
-        String dtManhaFim = txDtFim.getText();
         Funcionario funcionario;
+        String codigoFunc = txFuncionarioCodigo.getText();
+        char tipo;
+        String dtIni = txDtInicio.getText();
+        String dtFim = txDtFim.getText();
+        Date dIni = null;
+        Date dFim = null;
+        String hrManhaInicio = txHrManhaInicio.getText();
+        String hrManhaFim = txHrManhaFim.getText();
+        String hrTardeInicio = txHrTardeInicio.getText();
+        String hrTardeFim = txHrTardeFim.getText();
+        String motivo = txMotivo.getText();
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 
         if (!validaCampoVazio(codigoFunc)) {
             lbStatus.setText("Informe o funcionário");
+            txFuncionarioCodigo.grabFocus();
             return;
         }
 
         if (!validaInt(codigoFunc)) {
             lbStatus.setText("Informe o funcionário corretamente");
+            txFuncionarioCodigo.grabFocus();
             return;
         }
 
         funcionario = FuncionarioController.buscarPorId(Integer.parseInt(codigoFunc));
 
         if (funcionario == null) {
-            lbStatus.setText("FUncionário não encontrado");
+            lbStatus.setText("Funcionário não encontrado");
+            txFuncionarioCodigo.grabFocus();
             return;
         }
 
-        if (!validaCampoVazio(dtManhaIni)) {
+        switch (cbTipo.getSelectedIndex()) {
+            case 0:
+                tipo = 'F';
+                break;
+            case 1:
+                tipo = 'E';
+                break;
+            case 2:
+                tipo = 'S';
+                break;
+            default:
+                tipo = 'F';
+        }
+
+        if (!validaCampoVazio(dtIni)) {
             lbStatus.setText("Informe a data inicial");
+            txDtInicio.grabFocus();
             return;
         }
 
-        if (!validaCampoVazio(dtManhaFim)) {
-            lbStatus.setText("Informe a data final");
+        if (!validaData(dtIni)) {
+            lbStatus.setText("Informe a data corretamnete");
+            txDtInicio.grabFocus();
             return;
         }
-        
+
+        try {
+            dIni = sdf.parse(dtIni);
+        } catch (ParseException ex) {
+        }
+
+        if (!validaCampoVazio(dtFim)) {
+            lbStatus.setText("Informe a data final");
+            txDtFim.grabFocus();
+            return;
+        }
+
+        if (!validaData(dtFim)) {
+            lbStatus.setText("Informe a data corretamnete");
+            txDtFim.grabFocus();
+            return;
+        }
+
+        try {
+            dFim = sdf.parse(dtFim);
+        } catch (ParseException ex) {
+        }
+
+        if (!ckDiaTodo.isSelected()) {
+            if (!validaCampoVazio(hrManhaInicio)) {
+                lbStatus.setText("Informe a hora inicial da manhã");
+                txHrManhaInicio.grabFocus();
+                return;
+            }
+
+            if (!validaCampoVazio(hrManhaFim)) {
+                lbStatus.setText("Informe a hora final da manhã");
+                txHrManhaFim.grabFocus();
+                return;
+            }
+
+            if (!validaCampoVazio(hrTardeInicio)) {
+                lbStatus.setText("Informe a hora inicial da tarde");
+                txHrTardeInicio.grabFocus();
+                return;
+            }
+
+            if (!validaCampoVazio(hrTardeFim)) {
+                lbStatus.setText("Informe a hora final da tarde");
+                txHrTardeFim.grabFocus();
+                return;
+            }
+        }
+
+        if (!validaCampoVazio(motivo)) {
+            lbStatus.setText("Informe o motivo");
+            txMotivo.grabFocus();
+            return;
+        }
+
+        sdf = new SimpleDateFormat("HH:mm");
+        Folga folga = new Folga();
+        folga.setFuncionario(funcionario);
+        folga.setTipo(tipo);
+        folga.setDtInicio(dIni);
+        folga.setDtFim(dFim);
+        try {
+            folga.getHrManhaInicio().setTime(sdf.parse(hrManhaInicio).getTime());
+        } catch (ParseException ex) {
+            JOptionPane.showMessageDialog(null, "Erro ao converter hora");
+        }
     }//GEN-LAST:event_btSalvarActionPerformed
+
+    private void txFuncionarioCodigoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txFuncionarioCodigoActionPerformed
+        Funcionario funcionario = null;
+        try {
+            funcionario = FuncionarioController.buscarPorId(
+                    Integer.parseInt(txFuncionarioCodigo.getText()));
+        } catch (NumberFormatException numberFormatException) {
+        }
+
+        if (funcionario != null) {
+            txFuncionarioNome.setText(funcionario.getNome());
+            funcionario = null;
+        } else {
+            txFuncionarioNome.setText(null);
+        }
+    }//GEN-LAST:event_txFuncionarioCodigoActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btCancelar;

@@ -1,6 +1,10 @@
 package util;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.InputMismatchException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Classe Validadores * Contém todos os métodos para validação de dados
@@ -275,7 +279,7 @@ public abstract class Validadores {
             return false;
         }
     }
-    
+
     /**
      * Método responsável por validar dados do tipo inteiro.
      *
@@ -304,8 +308,14 @@ public abstract class Validadores {
     public static boolean validaData(String text) {
         if (text.trim().length() < 10) {
             return false;
-        } else {
-            return true;
         }
+
+        try {
+            new SimpleDateFormat("dd/MM/yyyy").parse(text);
+        } catch (ParseException ex) {
+            return false;
+        }
+
+        return true;
     }
 }
