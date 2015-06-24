@@ -460,11 +460,11 @@ public class LancamentoSaidaGUI extends javax.swing.JFrame {
         folga.setTipo(tipo);
         folga.setDtInicio(dIni);
         folga.setDtFim(dFim);
-        try {
-            folga.getHrManhaInicio().setTime(sdf.parse(hrManhaInicio).getTime());
-        } catch (ParseException ex) {
-            JOptionPane.showMessageDialog(null, "Erro ao converter hora");
-        }
+//        try {
+//            folga.setHrManhaInicio(sdf.parse(hrManhaInicio).getTime());
+//        } catch (ParseException ex) {
+//            JOptionPane.showMessageDialog(null, "Erro ao converter hora");
+//        }
     }//GEN-LAST:event_btSalvarActionPerformed
 
     private void txFuncionarioCodigoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txFuncionarioCodigoActionPerformed
