@@ -1,5 +1,6 @@
 package util;
 
+import java.sql.Time;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.InputMismatchException;
@@ -161,10 +162,10 @@ public abstract class Validadores {
     }
 
     /**
-     * Método responsável por validar e-mail.
+     * Método responsável por validar hora do tipo Time
      *
      * @author Gabriel Arsênio da Silva
-     * @since v1.00 05/08/2014
+     * @since v1.00 25/06/2015
      * @param text
      * @return
      */
@@ -179,6 +180,24 @@ public abstract class Validadores {
             return true;
         }
         return false;
+    }
+
+    /**
+     * Método responsável por validar e-mail.
+     *
+     * @author Gabriel Arsênio da Silva
+     * @since v1.00 05/08/2014
+     * @param text
+     * @return
+     */
+    public static boolean validaHora(String text) {
+        
+        try {
+            java.sql.Time hora = Time.valueOf(text);
+        } catch (IllegalArgumentException e) {
+            return false;
+        }
+        return true;
     }
 
     /**

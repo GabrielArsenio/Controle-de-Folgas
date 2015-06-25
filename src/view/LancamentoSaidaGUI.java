@@ -1,6 +1,7 @@
 package view;
 
 import controller.FuncionarioController;
+import java.sql.Time;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -204,14 +205,6 @@ public class LancamentoSaidaGUI extends javax.swing.JFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(ckDiaTodo))
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(lbHoraTarde, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(txHrTardeInicio, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(lbAsTarde, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(txHrTardeFim, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
                                 .addComponent(lbFuncionario, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(txFuncionarioCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -245,7 +238,16 @@ public class LancamentoSaidaGUI extends javax.swing.JFrame {
                         .addComponent(btSalvar)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btCancelar))
-                    .addComponent(lbStatus, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(lbStatus, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(lbHoraTarde, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txHrTardeInicio, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(lbAsTarde, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txHrTardeFim, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -348,6 +350,7 @@ public class LancamentoSaidaGUI extends javax.swing.JFrame {
         Date dIni = null;
         Date dFim = null;
         String hrManhaInicio = txHrManhaInicio.getText();
+        java.sql.Time hManhaInicio;
         String hrManhaFim = txHrManhaFim.getText();
         String hrTardeInicio = txHrTardeInicio.getText();
         String hrTardeFim = txHrTardeFim.getText();
@@ -454,17 +457,16 @@ public class LancamentoSaidaGUI extends javax.swing.JFrame {
             return;
         }
 
-        sdf = new SimpleDateFormat("HH:mm");
+        sdf = new SimpleDateFormat("HH:mm:ss");
         Folga folga = new Folga();
         folga.setFuncionario(funcionario);
         folga.setTipo(tipo);
         folga.setDtInicio(dIni);
         folga.setDtFim(dFim);
-//        try {
-//            folga.setHrManhaInicio(sdf.parse(hrManhaInicio).getTime());
-//        } catch (ParseException ex) {
-//            JOptionPane.showMessageDialog(null, "Erro ao converter hora");
-//        }
+        hManhaInicio = Time.valueOf(hrManhaInicio);
+            
+        
+        JOptionPane.showMessageDialog(null, "aee");
     }//GEN-LAST:event_btSalvarActionPerformed
 
     private void txFuncionarioCodigoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txFuncionarioCodigoActionPerformed
