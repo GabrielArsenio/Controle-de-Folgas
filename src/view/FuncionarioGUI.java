@@ -10,6 +10,7 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
 import model.Cargo;
@@ -28,12 +29,23 @@ public class FuncionarioGUI extends javax.swing.JFrame {
     private final int qtdRegistros = 50;
     private char modo; // I - Inclusao, M - Manutenção/Alteração
     private List<Funcionario> funcionarios;
+    private JTextField txCodigoZoom;
+    private JTextField txNomeZoom;
 
     private DefaultTableModel modelo;
     private JTable tabela;
 
     public FuncionarioGUI() {
         initComponents();
+        setLocationRelativeTo(null);
+        this.criarTabela();
+    }
+
+    public FuncionarioGUI(JTextField txCodigo, JTextField txNome) {
+        initComponents();
+        this.txCodigoZoom = txCodigo;
+        this.txNomeZoom = txNome;
+        this.btSelecionar.setEnabled(true);
         setLocationRelativeTo(null);
         this.criarTabela();
     }
@@ -81,7 +93,7 @@ public class FuncionarioGUI extends javax.swing.JFrame {
             } catch (NullPointerException e) {
             }
             modelo.addRow(new Object[]{
-                f.getCodigo(), f.getNome(), f.getEmail(), f.getCargo().getNome()
+                f.getCodigo(), f.getNome(), f.getEmail(), f.getCargo() != null ? f.getCargo().getNome() : ""
             });
         }
     }
@@ -206,7 +218,7 @@ public class FuncionarioGUI extends javax.swing.JFrame {
             lbStatus.setText("Informe o usuário");
             return;
         }
-        
+
         usuario = UsuarioController.buscarUsuario(txUsuarioCodigo.getText());
         if (usuario == null) {
             lbStatus.setText("Usuário não encontrado");
@@ -384,6 +396,7 @@ public class FuncionarioGUI extends javax.swing.JFrame {
         txUsuarioCodigo = new javax.swing.JTextField();
         txUsuarioNome = new javax.swing.JTextField();
         btUsuario = new javax.swing.JButton();
+        btSelecionar = new javax.swing.JButton();
 
         cbFiltro.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Código", "Nome", "Usuário", "Área" }));
         cbFiltro.setEnabled(false);
@@ -566,6 +579,15 @@ public class FuncionarioGUI extends javax.swing.JFrame {
         btUsuario.setText("Buscar");
         btUsuario.setToolTipText("Buscar área");
 
+        btSelecionar.setText("Selecionar");
+        btSelecionar.setToolTipText("Salvar usuário");
+        btSelecionar.setEnabled(false);
+        btSelecionar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btSelecionarActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout painelFundoLayout = new javax.swing.GroupLayout(painelFundo);
         painelFundo.setLayout(painelFundoLayout);
         painelFundoLayout.setHorizontalGroup(
@@ -576,7 +598,8 @@ public class FuncionarioGUI extends javax.swing.JFrame {
                     .addComponent(painelConsulta, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(lbTitulo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, painelFundoLayout.createSequentialGroup()
-                        .addGap(0, 542, Short.MAX_VALUE)
+                        .addComponent(btSelecionar)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(btSalvar, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(btNovo, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -644,7 +667,7 @@ public class FuncionarioGUI extends javax.swing.JFrame {
                                         .addComponent(txUsuarioNome, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(btUsuario)))))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addGap(0, 23, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         painelFundoLayout.setVerticalGroup(
@@ -696,7 +719,8 @@ public class FuncionarioGUI extends javax.swing.JFrame {
                     .addGroup(painelFundoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(btSalvar)
                         .addComponent(btNovo)
-                        .addComponent(btExcluir))
+                        .addComponent(btExcluir)
+                        .addComponent(btSelecionar))
                     .addComponent(sp1, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(painelConsulta, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -737,6 +761,19 @@ public class FuncionarioGUI extends javax.swing.JFrame {
         inclusaoRegistro();
     }//GEN-LAST:event_btNovoActionPerformed
 
+    private void btSelecionarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btSelecionarActionPerformed
+        int linha = -1;
+        linha = tabela.getSelectedRow();
+
+        if (!(linha > -1)) {
+            JOptionPane.showMessageDialog(null, "Nenhuma linha foi selecionada");
+        } else {
+            txCodigoZoom.setText(txCodigo.getText());
+            txNomeZoom.setText(txNome.getText());
+            this.dispose();
+        }
+    }//GEN-LAST:event_btSelecionarActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup bgSexo;
     private javax.swing.JButton btAnterior;
@@ -745,6 +782,7 @@ public class FuncionarioGUI extends javax.swing.JFrame {
     private javax.swing.JButton btNovo;
     private javax.swing.JButton btProximo;
     private javax.swing.JButton btSalvar;
+    private javax.swing.JButton btSelecionar;
     private javax.swing.JButton btSetor;
     private javax.swing.JButton btUsuario;
     private javax.swing.JComboBox cbFiltro;

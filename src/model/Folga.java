@@ -38,6 +38,7 @@ public class Folga implements Serializable {
     @Column(nullable = true)
     private char status;
     private String observacao;
+    private boolean diaTodo;
 
     public Folga() {
     }
@@ -53,6 +54,14 @@ public class Folga implements Serializable {
 
     public void setCodigo(int codigo) {
         this.codigo = codigo;
+    }
+
+    public boolean isDiaTodo() {
+        return diaTodo;
+    }
+
+    public void setDiaTodo(boolean diaTodo) {
+        this.diaTodo = diaTodo;
     }
 
     public Funcionario getFuncionario() {

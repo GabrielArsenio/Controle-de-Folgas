@@ -405,6 +405,7 @@ public class UsuarioGUI extends javax.swing.JFrame {
 
         btSelecionar.setText("Selecionar");
         btSelecionar.setToolTipText("Salvar usuário");
+        btSelecionar.setEnabled(false);
         btSelecionar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btSelecionarActionPerformed(evt);

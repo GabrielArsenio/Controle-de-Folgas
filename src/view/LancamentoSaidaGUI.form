@@ -99,7 +99,6 @@
                       <Component id="lbAsTarde" min="-2" pref="21" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="txHrTardeFim" min="-2" pref="51" max="-2" attributes="0"/>
-                      <EmptySpace min="49" max="32767" attributes="0"/>
                   </Group>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
@@ -267,6 +266,9 @@
         <Property name="toolTipText" type="java.lang.String" value="Buscar &#xe1;rea"/>
         <Property name="focusable" type="boolean" value="false"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btFuncionarioActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JComboBox" name="cbTipo">
       <Properties>

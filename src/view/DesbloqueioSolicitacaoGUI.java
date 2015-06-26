@@ -1,13 +1,102 @@
 package view;
 
+import controller.FolgaController;
+import controller.FuncionarioController;
+import controller.SetorController;
+import controller.UsuarioController;
+import java.util.List;
+import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
+import javax.swing.table.DefaultTableModel;
+import model.Folga;
+import model.Usuario;
+
 /**
  *
  * @author Gabriel
  */
 public class DesbloqueioSolicitacaoGUI extends javax.swing.JFrame {
 
+    private final int qtdRegistros = 50;
+    private DefaultTableModel modelo;
+    private JTable tabela;
+    private List<Folga> folgas;
+
     public DesbloqueioSolicitacaoGUI() {
         initComponents();
+        this.criarTabela();
+    }
+
+    private void criarTabela() {
+        modelo = new DefaultTableModel();
+        tabela = new JTable(modelo);
+
+        modelo.addColumn("");
+        modelo.addColumn("Usuário");
+        modelo.addColumn("Setor");
+        modelo.addColumn("Data Inicial");
+        modelo.addColumn("Data Final");
+        modelo.addColumn("Horário");
+        modelo.addColumn("Tipo");
+        modelo.addColumn("Motivo");
+        modelo.addColumn("Observações");
+
+//        modelo.addColumn("Área");
+        preencherTabela(0, qtdRegistros);
+
+        //Eventos
+//        tabela.addMouseListener(new java.awt.event.MouseAdapter() {
+//            @Override
+//            public void mouseClicked(java.awt.event.MouseEvent evt) {
+//                manutencaoRegistro(evt);
+//            }
+//        });
+        //Configurações
+        scrollConsulta.setViewportView(tabela);
+        tabela.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+//        inclusaoRegistro();
+//        tabela.addRowSelectionInterval(0, 0);
+    }
+
+    /* Busca no banco e adiciona as linhas */
+    private void preencherTabela(int min, int max) {
+        folgas = FolgaController.listarTodos(min, max);
+        String usuario = null;
+        String setor = null;
+        String dtIni = null;
+        String dtFim = null;
+
+        for (Folga f : folgas) {
+            try {
+                f.setFuncionario(FuncionarioController.buscarPorId(f.getFuncionario().getCodigo()));
+            } catch (Exception e) {
+            }
+            try {
+                f.getFuncionario().setUsuario(UsuarioController.buscarUsuario(f.getFuncionario().getUsuario().getUsuario()));
+            } catch (Exception e) {
+            }
+
+            try {
+                usuario = f.getFuncionario().getUsuario().getUsuario();
+            } catch (Exception e) {
+            }
+
+            try {
+                f.getFuncionario().setArea(SetorController.buscarPorId(f.getFuncionario().getArea().getCodigo()));
+            } catch (Exception e) {
+            }
+
+            try {
+                setor = f.getFuncionario().getArea().getNome();
+            } catch (Exception e) {
+            }
+            
+            
+
+            modelo.addRow(new Object[]{
+                "",usuario, setor, "", "","","","",""
+            });
+        }
     }
 
     @SuppressWarnings("unchecked")

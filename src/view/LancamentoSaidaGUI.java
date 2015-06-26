@@ -19,6 +19,8 @@ import static util.Validadores.*;
  */
 public class LancamentoSaidaGUI extends javax.swing.JFrame {
 
+    private FuncionarioGUI funcionarioGUI = new FuncionarioGUI();
+
     public LancamentoSaidaGUI() {
         this.initComponents();
         this.setLocationRelativeTo(null);
@@ -108,6 +110,11 @@ public class LancamentoSaidaGUI extends javax.swing.JFrame {
         btFuncionario.setText("Buscar");
         btFuncionario.setToolTipText("Buscar área");
         btFuncionario.setFocusable(false);
+        btFuncionario.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btFuncionarioActionPerformed(evt);
+            }
+        });
 
         cbTipo.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Folga", "Férias", "Saída" }));
 
@@ -267,8 +274,7 @@ public class LancamentoSaidaGUI extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(lbAsTarde, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txHrTardeFim, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addComponent(txHrTardeFim, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -516,6 +522,7 @@ public class LancamentoSaidaGUI extends javax.swing.JFrame {
         folga.setTipo(tipo);
         folga.setDtInicio(dIni);
         folga.setDtFim(dFim);
+        folga.setDiaTodo(ckDiaTodo.isSelected());
         if (!ckDiaTodo.isSelected()) {
             folga.setHrManhaInicio(Time.valueOf(hrManhaInicio.concat(":00")));
             folga.setHrManhaFim(Time.valueOf(hrManhaFim.concat(":00")));
@@ -572,6 +579,14 @@ public class LancamentoSaidaGUI extends javax.swing.JFrame {
         } catch (Exception e) {
         }
     }//GEN-LAST:event_txHrTardeFimKeyReleased
+
+    private void btFuncionarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btFuncionarioActionPerformed
+        if (funcionarioGUI != null) {
+            funcionarioGUI.dispose();
+        }
+        funcionarioGUI = new FuncionarioGUI(txFuncionarioCodigo, txFuncionarioNome);
+        funcionarioGUI.setVisible(true);
+    }//GEN-LAST:event_btFuncionarioActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btCancelar;
