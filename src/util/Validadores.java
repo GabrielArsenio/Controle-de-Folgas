@@ -191,10 +191,10 @@ public abstract class Validadores {
      * @return
      */
     public static boolean validaHora(String text) {
-        
+        text = text.concat(":00");
         try {
             java.sql.Time hora = Time.valueOf(text);
-        } catch (IllegalArgumentException e) {
+        } catch (Exception e) {
             return false;
         }
         return true;
@@ -331,7 +331,7 @@ public abstract class Validadores {
 
         try {
             new SimpleDateFormat("dd/MM/yyyy").parse(text);
-        } catch (ParseException ex) {
+        } catch (Exception ex) {
             return false;
         }
 

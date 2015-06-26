@@ -11,32 +11,32 @@ import model.Folga;
  */
 public class FolgaController {
 
-    public Folga salvar(Folga folga) {
+    public static Folga salvar(Folga folga) {
         FolgaDAO dao = new FolgaDAOJPA();
         return dao.save(folga);
     }
 
-    public boolean excluir(int codigo) {
+    public static boolean excluir(int codigo) {
         FolgaDAO dao = new FolgaDAOJPA();
         return dao.remove(Folga.class, codigo);
     }
 
-    public List<Folga> listarTodos() {
+    public static List<Folga> listarTodos() {
         FolgaDAO dao = new FolgaDAOJPA();
         return dao.getAll(Folga.class);
     }
 
-    public List<Folga> listarTodos(int min, int max) {
+    public static List<Folga> listarTodos(int min, int max) {
         FolgaDAO dao = new FolgaDAOJPA();
         return dao.getAll(Folga.class);
     }
 
-    public Folga buscarPorId(int codigo) {
+    public static Folga buscarPorId(int codigo) {
         FolgaDAO dao = new FolgaDAOJPA();
         return dao.getById(Folga.class, codigo);
     }
 
-    public List<Folga> pesquisarMotivo(String nome) {
+    public static List<Folga> pesquisarMotivo(String nome) {
         FolgaDAO dao = new FolgaDAOJPA();
         return dao.pesquisarMotivo(nome);
     }

@@ -1,5 +1,6 @@
 package view;
 
+import controller.FolgaController;
 import controller.FuncionarioController;
 import java.sql.Time;
 import java.text.ParseException;
@@ -125,6 +126,11 @@ public class LancamentoSaidaGUI extends javax.swing.JFrame {
         txHrManhaInicio.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         txHrManhaInicio.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         txHrManhaInicio.setText("00:00");
+        txHrManhaInicio.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txHrManhaInicioKeyReleased(evt);
+            }
+        });
 
         lbAsManha.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         lbAsManha.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -133,10 +139,20 @@ public class LancamentoSaidaGUI extends javax.swing.JFrame {
         txHrManhaFim.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         txHrManhaFim.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         txHrManhaFim.setText("00:00");
+        txHrManhaFim.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txHrManhaFimKeyReleased(evt);
+            }
+        });
 
         txHrTardeInicio.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         txHrTardeInicio.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         txHrTardeInicio.setText("00:00");
+        txHrTardeInicio.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txHrTardeInicioKeyReleased(evt);
+            }
+        });
 
         lbAsTarde.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         lbAsTarde.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -145,6 +161,11 @@ public class LancamentoSaidaGUI extends javax.swing.JFrame {
         txHrTardeFim.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         txHrTardeFim.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         txHrTardeFim.setText("00:00");
+        txHrTardeFim.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txHrTardeFimKeyReleased(evt);
+            }
+        });
 
         scrollMotivo.setViewportView(txMotivo);
 
@@ -350,11 +371,14 @@ public class LancamentoSaidaGUI extends javax.swing.JFrame {
         Date dIni = null;
         Date dFim = null;
         String hrManhaInicio = txHrManhaInicio.getText();
-        java.sql.Time hManhaInicio;
         String hrManhaFim = txHrManhaFim.getText();
         String hrTardeInicio = txHrTardeInicio.getText();
         String hrTardeFim = txHrTardeFim.getText();
         String motivo = txMotivo.getText();
+        Time hManhaInicio;
+        Time hManhaFim;
+        Time hTardeInicio;
+        Time hTardeFim;
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 
         if (!validaCampoVazio(codigoFunc)) {
@@ -398,7 +422,7 @@ public class LancamentoSaidaGUI extends javax.swing.JFrame {
         }
 
         if (!validaData(dtIni)) {
-            lbStatus.setText("Informe a data corretamnete");
+            lbStatus.setText("Informe a data inicial corretamnete");
             txDtInicio.grabFocus();
             return;
         }
@@ -415,7 +439,7 @@ public class LancamentoSaidaGUI extends javax.swing.JFrame {
         }
 
         if (!validaData(dtFim)) {
-            lbStatus.setText("Informe a data corretamnete");
+            lbStatus.setText("Informe a data final corretamnete");
             txDtFim.grabFocus();
             return;
         }
@@ -425,9 +449,21 @@ public class LancamentoSaidaGUI extends javax.swing.JFrame {
         } catch (ParseException ex) {
         }
 
+        if (dIni.after(dFim)) {
+            lbStatus.setText("A data inicial não pode ser maior que a data final");
+            txDtInicio.grabFocus();
+            return;
+        }
+
         if (!ckDiaTodo.isSelected()) {
             if (!validaCampoVazio(hrManhaInicio)) {
                 lbStatus.setText("Informe a hora inicial da manhã");
+                txHrManhaInicio.grabFocus();
+                return;
+            }
+
+            if (!validaHora(hrManhaInicio)) {
+                lbStatus.setText("Informe a hora inicial da manhã corretamente");
                 txHrManhaInicio.grabFocus();
                 return;
             }
@@ -438,14 +474,32 @@ public class LancamentoSaidaGUI extends javax.swing.JFrame {
                 return;
             }
 
+            if (!validaHora(hrManhaFim)) {
+                lbStatus.setText("Informe a hora final da manhã corretamente");
+                txHrManhaFim.grabFocus();
+                return;
+            }
+
             if (!validaCampoVazio(hrTardeInicio)) {
                 lbStatus.setText("Informe a hora inicial da tarde");
                 txHrTardeInicio.grabFocus();
                 return;
             }
 
+            if (!validaHora(hrTardeInicio)) {
+                lbStatus.setText("Informe a hora inicial da tarde corretamente");
+                txHrTardeInicio.grabFocus();
+                return;
+            }
+
             if (!validaCampoVazio(hrTardeFim)) {
                 lbStatus.setText("Informe a hora final da tarde");
+                txHrTardeFim.grabFocus();
+                return;
+            }
+
+            if (!validaHora(hrTardeFim)) {
+                lbStatus.setText("Informe a hora final da tarde corretamente");
                 txHrTardeFim.grabFocus();
                 return;
             }
@@ -457,16 +511,22 @@ public class LancamentoSaidaGUI extends javax.swing.JFrame {
             return;
         }
 
-        sdf = new SimpleDateFormat("HH:mm:ss");
         Folga folga = new Folga();
         folga.setFuncionario(funcionario);
         folga.setTipo(tipo);
         folga.setDtInicio(dIni);
         folga.setDtFim(dFim);
-        hManhaInicio = Time.valueOf(hrManhaInicio);
-            
-        
-        JOptionPane.showMessageDialog(null, "aee");
+        if (!ckDiaTodo.isSelected()) {
+            folga.setHrManhaInicio(Time.valueOf(hrManhaInicio.concat(":00")));
+            folga.setHrManhaFim(Time.valueOf(hrManhaFim.concat(":00")));
+            folga.setHrTardeInicio(Time.valueOf(hrTardeInicio.concat(":00")));
+            folga.setHrTardeFim(Time.valueOf(hrTardeFim.concat(":00")));
+            folga.setMotivo(motivo);
+        }
+        if (FolgaController.salvar(folga) != null) {
+            JOptionPane.showMessageDialog(null, "Solicitação enviada");
+            this.dispose();
+        }
     }//GEN-LAST:event_btSalvarActionPerformed
 
     private void txFuncionarioCodigoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txFuncionarioCodigoActionPerformed
@@ -484,6 +544,34 @@ public class LancamentoSaidaGUI extends javax.swing.JFrame {
             txFuncionarioNome.setText(null);
         }
     }//GEN-LAST:event_txFuncionarioCodigoActionPerformed
+
+    private void txHrManhaInicioKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txHrManhaInicioKeyReleased
+        try {
+            txHrManhaInicio.setText(txHrManhaInicio.getText().substring(0, 5));
+        } catch (Exception e) {
+        }
+    }//GEN-LAST:event_txHrManhaInicioKeyReleased
+
+    private void txHrManhaFimKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txHrManhaFimKeyReleased
+        try {
+            txHrManhaFim.setText(txHrManhaFim.getText().substring(0, 5));
+        } catch (Exception e) {
+        }
+    }//GEN-LAST:event_txHrManhaFimKeyReleased
+
+    private void txHrTardeInicioKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txHrTardeInicioKeyReleased
+        try {
+            txHrTardeInicio.setText(txHrTardeInicio.getText().substring(0, 5));
+        } catch (Exception e) {
+        }
+    }//GEN-LAST:event_txHrTardeInicioKeyReleased
+
+    private void txHrTardeFimKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txHrTardeFimKeyReleased
+        try {
+            txHrTardeFim.setText(txHrTardeFim.getText().substring(0, 5));
+        } catch (Exception e) {
+        }
+    }//GEN-LAST:event_txHrTardeFimKeyReleased
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btCancelar;

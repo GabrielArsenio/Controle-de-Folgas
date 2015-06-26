@@ -24,7 +24,7 @@ public class Test {
 //        List<Cargo> cargos = CargoController.listarTodos();
         List<Funcionario> funcionarios = FuncionarioController.listarTodos();
         
-        System.out.println(Time.valueOf("0:02:0"));    
+        System.out.println(Time.valueOf("1000:-2:0"));    
 //        for (int i = 0; i < 10; i++) {
 //            SetorController.salvar(new Setor("Setor", "Descricao", funcionarios.get(i)));
 //        }
